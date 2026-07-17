@@ -1,0 +1,14 @@
+{
+    "overrides": [
+        {
+            "unitName": "PeasantBowmen",
+            "meleeAttack": "8",
+            "armor": "10"
+        },
+        {
+            "unitName": "LevySwordsmen",
+            "meleeAttack": "12",
+            "hitPointsPerUnit": "12"
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "overrides": [
+        {
+            "race": "IronLegion",
+            "primaryColor": { "r": 0.1, "g": 0.2, "b": 0.8, "a": 1.0 },
+            "secondaryColor": { "r": 0.9, "g": 0.9, "b": 0.9, "a": 1.0 },
+            "accentColor": { "r": 1.0, "g": 0.85, "b": 0.0, "a": 1.0 }
+        }
+    ]
+}

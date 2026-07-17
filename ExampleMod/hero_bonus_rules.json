@@ -1,0 +1,28 @@
+{
+    "statRules": [
+        {
+            "heroID": "1",
+            "localizationKey": "heroBonusTitle2",
+            "condition": { "filterKind": "Unconditional" },
+            "stat": "ChargeBonus",
+            "magnitudeKind": "Flat",
+            "value": "5"
+        },
+        {
+            "heroID": "1",
+            "localizationKey": "heroBonusTitle1",
+            "condition": { "filterKind": "RarityTier", "requiredRarityTier": "Rare" },
+            "stat": "MeleeAttack",
+            "magnitudeKind": "Flat",
+            "value": "4"
+        },
+        {
+            "heroID": "1",
+            "localizationKey": "heroBonusTitle1",
+            "condition": { "filterKind": "RarityTier", "requiredRarityTier": "Rare" },
+            "stat": "Leadership",
+            "magnitudeKind": "Flat",
+            "value": "10"
+        }
+    ]
+}

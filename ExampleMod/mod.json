@@ -1,0 +1,7 @@
+{
+    "displayName": "Example Mod - Buffed Iron Legion",
+    "author": "Your Name",
+    "version": "1.0.0",
+    "description": "A demonstration mod showing all four override file types. Boosts a couple Iron Legion units, recolors the Iron Legion banner, gives Edric Valeward extra starting gold, and strengthens his charge bonus.",
+    "workshopFileId": ""
+}
