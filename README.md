@@ -26,10 +26,6 @@ New mods are enabled automatically the first time the game finds them. Use the i
 
 If you subscribe to a mod on the Steam Workshop, it's synced into your local `Mods` folder automatically the next time you launch the game — from that point on it behaves exactly like a mod you installed by hand.
 
-## Getting a starting template
-
-Rather than typing every field from scratch, the game can export your current install's full data as a ready-to-edit template. In the Unity Editor: **Tools > Modding > Export Mod Template** (developers only) writes a complete, correctly-formatted set of all four files to `Mods/_Template/`. Copy whatever fields you actually want to change into your own mod folder and delete the rest — every override field is optional.
-
 ## `mod.json`
 
 ```json
@@ -61,7 +57,7 @@ A list of entries, each keyed by `unitName`. Include only the fields you want to
 }
 ```
 
-`unitName` must match an existing unit exactly (case-sensitive) — check the exported template or the example mod for correct spelling; there are around 140 units and this guide won't try to keep an exhaustive, always-up-to-date list. Overriding a `unitName` that doesn't exist is silently skipped (with a warning in the log) — this format can only change existing units, not add new ones.
+`unitName` must match an existing unit exactly (case-sensitive) — see [Unit name reference](#unit-name-reference) below for the full list. Overriding a `unitName` that doesn't exist is silently skipped (with a warning in the log) — this format can only change existing units, not add new ones.
 
 Available fields:
 
@@ -74,6 +70,28 @@ Available fields:
 | `hitPointsPerUnit`, `baseUnitCount` | int | must be positive - a zero or negative value is rejected and the previous value is kept |
 | `speed`, `leadership`, `baseRange`, `attackAccuracy`, `attackCooldown`, `rateOfFire`, `explosionRange`, `explosionForce` | float | |
 | `none`, `standardShields`, `armorPiercing`, `antiInfantry`, `antiLarge`, `terrifying`, `stalwart`, `outrider`, `swampCreature`, `forestDweller`, `chickenFlight`, `ethereal`, `bloodFrenzy`, `rage`, `emblazing`, `unstoppable`, `heavyShields`, `throwingAxes`, `armorSundering`, `monsterSlayer`, `forgefuryTempering`, `flamingAmmo`, `dragonsHoard`, `backStabbers`, `thickScales` | bool | write `"true"` or `"false"` |
+
+### Unit name reference
+
+All 114 unit names, grouped by faction in recruit order (common units first, legendary/monster units last). Also used for `signatureUnit` and `startingArmyUnits` in `hero_overrides.json`, and the `UnitName` condition in `hero_bonus_rules.json`.
+
+**Iron Legion**: `PeasantBowmen`, `LevySwordsmen`, `FieldPikemen`, `LandsknechtGreatswords`, `Arbalesters`, `MilanesePolearms`, `ImperialTemplars`, `DeepwoodRangers`, `BlackEagleHalberdiers`, `BorderlandRiders`, `HearthboundKnights`, `RoyalCavaliers`, `EisenmannRegiment`, `Ashguard`, `KaiserCannon`
+
+**Gruntkin**: `GoblinRabble`, `GoblinScrapShooters`, `DireWolves`, `OrcRavagers`, `OrcImpalers`, `OrcStalkers`, `BogmawTroll`, `ArmoredDirewolves`, `StonehewerGiant`, `StonegulletEnforcers`, `FleshshredderFanatics`, `Direriders`, `Gobbopult`, `Meatgrinders`, `Siegeclaws`
+
+**Raven Host**: `ThrallLevy`, `DriftwoodSkirmishers`, `SeawindSpears`, `Huskarls`, `Shieldmaidens`, `SkogarmadrArchers`, `Berserkers`, `Valkyries`, `VarangianGuard`, `SonsOfFenrir`, `Jomsvikings`, `AngelsOfDeath`, `DraugrBoltThrowers`
+
+**Taelindor Forest**: `SylvanArchers`, `ForestSpirits`, `AshwoodMilitia`, `AerindelGuard`, `Duskspears`, `MistweaverScouts`, `StarStriders`, `Veilpiercers`, `Treants`, `ElarionSentinels`, `SunspireBladelords`, `VeilkinDrakes`, `LorandelStarhurler`, `EmeraldAncient`
+
+**Sanguine Court**: `UndeadLevies`, `BoneclatterSpears`, `FeralHounds`, `GravestoneImps`, `DeathhavenFiends`, `Nightriders`, `BoneshardArchers`, `CorpseClaws`, `MistWraiths`, `BlackWardens`, `Bloodsworn`, `BloodswornKnights`, `Shadelords`, `NecroticChimerae`
+
+**Sakura Dynasty**: `AshigaruSpearmen`, `RoninWanderers`, `DaikyuCommoners`, `FootSamurai`, `NaginataOnna`, `KunoichiInfiltrators`, `DragonTachi`, `EmperorsArquebusiers`, `Hokoshu`, `KitsuneBlademasters`, `Oni`, `BanryuBombardiers`, `JoseonHwacha`, `GoldenSaru`
+
+**Deepstone Hold**: `RiftpickLaborers`, `CrackshotCrossbows`, `Cragflayers`, `HelmwallDefenders`, `DrakefireRiflers`, `GrimfireGuns`, `ThunderhoofChargers`, `GrimazulAncients`, `GlyphstonePhalanx`, `StormForgedBattery`, `TheBulwark`, `AbyssalDelveknights`, `ForgewrathHammers`
+
+**Drakosaur Brood**: `KoboldBrawlers`, `ScalebowKobolds`, `DireRaptors`, `VenomtailArchers`, `Brutes`, `Redhorns`, `RaptorRiders`, `TriceraPlatform`, `BlackDragon`, `Leviathans`, `StegoplateGuard`, `BloodCarnos`, `Kaiju`, `ObsidianScales`
+
+**Special** (garrison structures, not recruitable): `ArchersOfApollo`, `Gate`
 
 ## `race_overrides.json` — faction colors
 
