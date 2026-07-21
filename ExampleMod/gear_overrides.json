@@ -1,0 +1,164 @@
+{
+    "overrides": [
+        {
+            "gearID": "ArmingSwords",
+            "gearModifierValue": "6"
+        },
+        {
+            "gearID": "Longbows",
+            "gearModifierValue": "25"
+        },
+        {
+            "gearID": "Glaives",
+            "gearModifierValue": "10"
+        },
+        {
+            "gearID": "ConscriptionOrders",
+            "gearModifierValue": "6"
+        },
+        {
+            "gearID": "TexanBBQ",
+            "gearModifierValue": "6"
+        },
+        {
+            "gearID": "BallisticCharts",
+            "gearModifierValue": "10"
+        },
+        {
+            "gearID": "DiamondTippedArrows",
+            "gearModifierValue": "0"
+        },
+        {
+            "gearID": "WellHonedAxes",
+            "gearModifierValue": "10"
+        },
+        {
+            "gearID": "RingoftheElvenKing",
+            "gearModifierValue": "4"
+        },
+        {
+            "gearID": "RiverTrout",
+            "gearModifierValue": "0"
+        },
+        {
+            "gearID": "RavensEye",
+            "gearModifierValue": "20"
+        },
+        {
+            "gearID": "Turkey",
+            "gearModifierValue": "0"
+        },
+        {
+            "gearID": "HeavyWeapons",
+            "gearModifierValue": "0"
+        },
+        {
+            "gearID": "BucklerShields",
+            "gearModifierValue": "5"
+        },
+        {
+            "gearID": "IronBank",
+            "gearModifierValue": "0"
+        },
+        {
+            "gearID": "OmenofFamine",
+            "gearModifierValue": "2"
+        },
+        {
+            "gearID": "QuantitativeEasingPolicy",
+            "gearModifierValue": "10"
+        },
+        {
+            "gearID": "Mitre",
+            "gearModifierValue": "0"
+        },
+        {
+            "gearID": "MichaelsSecretStuff",
+            "gearModifierValue": "0"
+        },
+        {
+            "gearID": "ChugJug",
+            "gearModifierValue": "0"
+        },
+        {
+            "gearID": "TowerShields",
+            "gearModifierValue": "100"
+        },
+        {
+            "gearID": "OrnateRing",
+            "gearModifierValue": "0"
+        },
+        {
+            "gearID": "JailersKey",
+            "gearModifierValue": "2"
+        },
+        {
+            "gearID": "BraceletoftheSunGoddess",
+            "gearModifierValue": "0"
+        },
+        {
+            "gearID": "ThePotato",
+            "gearModifierValue": "0"
+        },
+        {
+            "gearID": "Cauldron",
+            "gearModifierValue": "0"
+        },
+        {
+            "gearID": "Shungite",
+            "gearModifierValue": "8"
+        },
+        {
+            "gearID": "CommonBuilder",
+            "gearModifierValue": "3"
+        },
+        {
+            "gearID": "UncommonBuilder",
+            "gearModifierValue": "10"
+        },
+        {
+            "gearID": "RareBuilder",
+            "gearModifierValue": "30"
+        },
+        {
+            "gearID": "JoustingLances",
+            "gearModifierValue": "8"
+        },
+        {
+            "gearID": "BearSpray",
+            "gearModifierValue": "0"
+        },
+        {
+            "gearID": "CookieAndFowlCard",
+            "gearModifierValue": "0"
+        },
+        {
+            "gearID": "GnomishArmorers",
+            "gearModifierValue": "8"
+        },
+        {
+            "gearID": "PrivateeringPapers",
+            "gearModifierValue": "0"
+        },
+        {
+            "gearID": "NorthernLooters",
+            "gearModifierValue": "0"
+        },
+        {
+            "gearID": "PumpkinPie",
+            "gearModifierValue": "0"
+        },
+        {
+            "gearID": "AuraFarming",
+            "gearModifierValue": "0"
+        },
+        {
+            "gearID": "DwarvenTaxCollectors",
+            "gearModifierValue": "10"
+        },
+        {
+            "gearID": "LuckyHorseshoe",
+            "gearModifierValue": "0"
+        }
+    ]
+}

@@ -1,0 +1,682 @@
+{
+    "enemyArmyRules": [
+        {
+            "board": "1",
+            "finalBattle": "True",
+            "knightDifficulty": "True",
+            "battlesFoughtMin": "",
+            "battlesFoughtMax": "",
+            "tierCounts": [
+                {
+                    "tier": "1",
+                    "count": "3"
+                },
+                {
+                    "tier": "2",
+                    "count": "3"
+                },
+                {
+                    "tier": "3",
+                    "count": "1"
+                },
+                {
+                    "tier": "4",
+                    "count": "1"
+                }
+            ]
+        },
+        {
+            "board": "1",
+            "finalBattle": "True",
+            "knightDifficulty": "False",
+            "battlesFoughtMin": "",
+            "battlesFoughtMax": "",
+            "tierCounts": [
+                {
+                    "tier": "1",
+                    "count": "3"
+                },
+                {
+                    "tier": "2",
+                    "count": "2"
+                },
+                {
+                    "tier": "3",
+                    "count": "1"
+                },
+                {
+                    "tier": "4",
+                    "count": "1"
+                }
+            ]
+        },
+        {
+            "board": "1",
+            "finalBattle": "False",
+            "knightDifficulty": "",
+            "battlesFoughtMin": "",
+            "battlesFoughtMax": "3",
+            "tierCounts": [
+                {
+                    "tier": "1",
+                    "count": "4"
+                }
+            ]
+        },
+        {
+            "board": "1",
+            "finalBattle": "False",
+            "knightDifficulty": "",
+            "battlesFoughtMin": "3",
+            "battlesFoughtMax": "5",
+            "tierCounts": [
+                {
+                    "tier": "1",
+                    "count": "3"
+                },
+                {
+                    "tier": "2",
+                    "count": "1"
+                }
+            ]
+        },
+        {
+            "board": "1",
+            "finalBattle": "False",
+            "knightDifficulty": "",
+            "battlesFoughtMin": "5",
+            "battlesFoughtMax": "7",
+            "tierCounts": [
+                {
+                    "tier": "1",
+                    "count": "3"
+                },
+                {
+                    "tier": "2",
+                    "count": "1"
+                },
+                {
+                    "tier": "3",
+                    "count": "1"
+                }
+            ]
+        },
+        {
+            "board": "1",
+            "finalBattle": "False",
+            "knightDifficulty": "",
+            "battlesFoughtMin": "7",
+            "battlesFoughtMax": "",
+            "tierCounts": [
+                {
+                    "tier": "1",
+                    "count": "3"
+                },
+                {
+                    "tier": "2",
+                    "count": "2"
+                },
+                {
+                    "tier": "3",
+                    "count": "2"
+                }
+            ]
+        },
+        {
+            "board": "2",
+            "finalBattle": "True",
+            "knightDifficulty": "True",
+            "battlesFoughtMin": "",
+            "battlesFoughtMax": "",
+            "tierCounts": [
+                {
+                    "tier": "1",
+                    "count": "1"
+                },
+                {
+                    "tier": "2",
+                    "count": "3"
+                },
+                {
+                    "tier": "3",
+                    "count": "4"
+                },
+                {
+                    "tier": "4",
+                    "count": "1"
+                }
+            ]
+        },
+        {
+            "board": "2",
+            "finalBattle": "True",
+            "knightDifficulty": "False",
+            "battlesFoughtMin": "",
+            "battlesFoughtMax": "",
+            "tierCounts": [
+                {
+                    "tier": "1",
+                    "count": "1"
+                },
+                {
+                    "tier": "2",
+                    "count": "4"
+                },
+                {
+                    "tier": "3",
+                    "count": "3"
+                },
+                {
+                    "tier": "4",
+                    "count": "1"
+                }
+            ]
+        },
+        {
+            "board": "2",
+            "finalBattle": "False",
+            "knightDifficulty": "",
+            "battlesFoughtMin": "",
+            "battlesFoughtMax": "3",
+            "tierCounts": [
+                {
+                    "tier": "1",
+                    "count": "1"
+                },
+                {
+                    "tier": "2",
+                    "count": "2"
+                },
+                {
+                    "tier": "3",
+                    "count": "1"
+                }
+            ]
+        },
+        {
+            "board": "2",
+            "finalBattle": "False",
+            "knightDifficulty": "",
+            "battlesFoughtMin": "3",
+            "battlesFoughtMax": "5",
+            "tierCounts": [
+                {
+                    "tier": "1",
+                    "count": "1"
+                },
+                {
+                    "tier": "2",
+                    "count": "3"
+                },
+                {
+                    "tier": "3",
+                    "count": "2"
+                }
+            ]
+        },
+        {
+            "board": "2",
+            "finalBattle": "False",
+            "knightDifficulty": "",
+            "battlesFoughtMin": "5",
+            "battlesFoughtMax": "7",
+            "tierCounts": [
+                {
+                    "tier": "1",
+                    "count": "1"
+                },
+                {
+                    "tier": "2",
+                    "count": "3"
+                },
+                {
+                    "tier": "3",
+                    "count": "3"
+                }
+            ]
+        },
+        {
+            "board": "2",
+            "finalBattle": "False",
+            "knightDifficulty": "",
+            "battlesFoughtMin": "7",
+            "battlesFoughtMax": "",
+            "tierCounts": [
+                {
+                    "tier": "1",
+                    "count": "1"
+                },
+                {
+                    "tier": "2",
+                    "count": "2"
+                },
+                {
+                    "tier": "3",
+                    "count": "5"
+                }
+            ]
+        },
+        {
+            "board": "3",
+            "finalBattle": "True",
+            "knightDifficulty": "True",
+            "battlesFoughtMin": "",
+            "battlesFoughtMax": "",
+            "tierCounts": [
+                {
+                    "tier": "1",
+                    "count": "2"
+                },
+                {
+                    "tier": "2",
+                    "count": "3"
+                },
+                {
+                    "tier": "3",
+                    "count": "4"
+                },
+                {
+                    "tier": "4",
+                    "count": "1"
+                }
+            ]
+        },
+        {
+            "board": "3",
+            "finalBattle": "True",
+            "knightDifficulty": "False",
+            "battlesFoughtMin": "",
+            "battlesFoughtMax": "",
+            "tierCounts": [
+                {
+                    "tier": "1",
+                    "count": "3"
+                },
+                {
+                    "tier": "2",
+                    "count": "3"
+                },
+                {
+                    "tier": "3",
+                    "count": "4"
+                },
+                {
+                    "tier": "4",
+                    "count": "1"
+                }
+            ]
+        },
+        {
+            "board": "3",
+            "finalBattle": "False",
+            "knightDifficulty": "",
+            "battlesFoughtMin": "",
+            "battlesFoughtMax": "3",
+            "tierCounts": [
+                {
+                    "tier": "1",
+                    "count": "3"
+                },
+                {
+                    "tier": "2",
+                    "count": "3"
+                },
+                {
+                    "tier": "3",
+                    "count": "2"
+                }
+            ]
+        },
+        {
+            "board": "3",
+            "finalBattle": "False",
+            "knightDifficulty": "",
+            "battlesFoughtMin": "3",
+            "battlesFoughtMax": "5",
+            "tierCounts": [
+                {
+                    "tier": "1",
+                    "count": "2"
+                },
+                {
+                    "tier": "2",
+                    "count": "2"
+                },
+                {
+                    "tier": "3",
+                    "count": "4"
+                }
+            ]
+        },
+        {
+            "board": "3",
+            "finalBattle": "False",
+            "knightDifficulty": "",
+            "battlesFoughtMin": "5",
+            "battlesFoughtMax": "7",
+            "tierCounts": [
+                {
+                    "tier": "1",
+                    "count": "2"
+                },
+                {
+                    "tier": "2",
+                    "count": "2"
+                },
+                {
+                    "tier": "3",
+                    "count": "5"
+                }
+            ]
+        },
+        {
+            "board": "3",
+            "finalBattle": "False",
+            "knightDifficulty": "",
+            "battlesFoughtMin": "7",
+            "battlesFoughtMax": "",
+            "tierCounts": [
+                {
+                    "tier": "2",
+                    "count": "2"
+                },
+                {
+                    "tier": "3",
+                    "count": "7"
+                }
+            ]
+        }
+    ],
+    "townGarrisonRules": [
+        {
+            "townSize": "Village",
+            "bookNumber": "1",
+            "difficultyImperator": "False",
+            "tierCounts": [
+                {
+                    "tier": "1",
+                    "count": "3"
+                }
+            ]
+        },
+        {
+            "townSize": "Castle",
+            "bookNumber": "1",
+            "difficultyImperator": "False",
+            "tierCounts": [
+                {
+                    "tier": "1",
+                    "count": "4"
+                },
+                {
+                    "tier": "2",
+                    "count": "2"
+                }
+            ]
+        },
+        {
+            "townSize": "City",
+            "bookNumber": "1",
+            "difficultyImperator": "False",
+            "tierCounts": [
+                {
+                    "tier": "1",
+                    "count": "2"
+                },
+                {
+                    "tier": "2",
+                    "count": "2"
+                },
+                {
+                    "tier": "3",
+                    "count": "2"
+                }
+            ]
+        },
+        {
+            "townSize": "Village",
+            "bookNumber": "1",
+            "difficultyImperator": "True",
+            "tierCounts": [
+                {
+                    "tier": "1",
+                    "count": "4"
+                }
+            ]
+        },
+        {
+            "townSize": "Castle",
+            "bookNumber": "1",
+            "difficultyImperator": "True",
+            "tierCounts": [
+                {
+                    "tier": "1",
+                    "count": "2"
+                },
+                {
+                    "tier": "2",
+                    "count": "4"
+                }
+            ]
+        },
+        {
+            "townSize": "City",
+            "bookNumber": "1",
+            "difficultyImperator": "True",
+            "tierCounts": [
+                {
+                    "tier": "1",
+                    "count": "3"
+                },
+                {
+                    "tier": "2",
+                    "count": "3"
+                },
+                {
+                    "tier": "3",
+                    "count": "2"
+                }
+            ]
+        },
+        {
+            "townSize": "Village",
+            "bookNumber": "2",
+            "difficultyImperator": "False",
+            "tierCounts": [
+                {
+                    "tier": "1",
+                    "count": "5"
+                }
+            ]
+        },
+        {
+            "townSize": "Castle",
+            "bookNumber": "2",
+            "difficultyImperator": "False",
+            "tierCounts": [
+                {
+                    "tier": "2",
+                    "count": "6"
+                }
+            ]
+        },
+        {
+            "townSize": "City",
+            "bookNumber": "2",
+            "difficultyImperator": "False",
+            "tierCounts": [
+                {
+                    "tier": "2",
+                    "count": "4"
+                },
+                {
+                    "tier": "3",
+                    "count": "2"
+                }
+            ]
+        },
+        {
+            "townSize": "Village",
+            "bookNumber": "2",
+            "difficultyImperator": "True",
+            "tierCounts": [
+                {
+                    "tier": "1",
+                    "count": "6"
+                }
+            ]
+        },
+        {
+            "townSize": "Castle",
+            "bookNumber": "2",
+            "difficultyImperator": "True",
+            "tierCounts": [
+                {
+                    "tier": "2",
+                    "count": "7"
+                }
+            ]
+        },
+        {
+            "townSize": "City",
+            "bookNumber": "2",
+            "difficultyImperator": "True",
+            "tierCounts": [
+                {
+                    "tier": "2",
+                    "count": "4"
+                },
+                {
+                    "tier": "3",
+                    "count": "4"
+                }
+            ]
+        },
+        {
+            "townSize": "Village",
+            "bookNumber": "3",
+            "difficultyImperator": "False",
+            "tierCounts": [
+                {
+                    "tier": "1",
+                    "count": "8"
+                }
+            ]
+        },
+        {
+            "townSize": "Castle",
+            "bookNumber": "3",
+            "difficultyImperator": "False",
+            "tierCounts": [
+                {
+                    "tier": "1",
+                    "count": "2"
+                },
+                {
+                    "tier": "2",
+                    "count": "5"
+                }
+            ]
+        },
+        {
+            "townSize": "City",
+            "bookNumber": "3",
+            "difficultyImperator": "False",
+            "tierCounts": [
+                {
+                    "tier": "2",
+                    "count": "3"
+                },
+                {
+                    "tier": "3",
+                    "count": "6"
+                }
+            ]
+        },
+        {
+            "townSize": "Village",
+            "bookNumber": "3",
+            "difficultyImperator": "True",
+            "tierCounts": [
+                {
+                    "tier": "1",
+                    "count": "9"
+                }
+            ]
+        },
+        {
+            "townSize": "Castle",
+            "bookNumber": "3",
+            "difficultyImperator": "True",
+            "tierCounts": [
+                {
+                    "tier": "1",
+                    "count": "2"
+                },
+                {
+                    "tier": "2",
+                    "count": "7"
+                }
+            ]
+        },
+        {
+            "townSize": "City",
+            "bookNumber": "3",
+            "difficultyImperator": "True",
+            "tierCounts": [
+                {
+                    "tier": "2",
+                    "count": "2"
+                },
+                {
+                    "tier": "3",
+                    "count": "7"
+                }
+            ]
+        }
+    ],
+    "enemyPrestigeRules": [
+        {
+            "actNumber": "1",
+            "enhanced": "False",
+            "chancePerSquad": "0.1",
+            "maxPrestigedSquads": "1",
+            "prestigeTwoChance": "0"
+        },
+        {
+            "actNumber": "2",
+            "enhanced": "False",
+            "chancePerSquad": "0.2",
+            "maxPrestigedSquads": "2",
+            "prestigeTwoChance": "0.15"
+        },
+        {
+            "actNumber": "3",
+            "enhanced": "False",
+            "chancePerSquad": "0.25",
+            "maxPrestigedSquads": "3",
+            "prestigeTwoChance": "0.25"
+        },
+        {
+            "actNumber": "1",
+            "enhanced": "True",
+            "chancePerSquad": "0.2",
+            "maxPrestigedSquads": "2",
+            "prestigeTwoChance": "0"
+        },
+        {
+            "actNumber": "2",
+            "enhanced": "True",
+            "chancePerSquad": "0.35",
+            "maxPrestigedSquads": "3",
+            "prestigeTwoChance": "0.2"
+        },
+        {
+            "actNumber": "3",
+            "enhanced": "True",
+            "chancePerSquad": "0.45",
+            "maxPrestigedSquads": "4",
+            "prestigeTwoChance": "0.3"
+        }
+    ]
+}

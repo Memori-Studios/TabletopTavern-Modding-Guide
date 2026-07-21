@@ -1,0 +1,281 @@
+{
+    "unitTierCosts": [
+        {
+            "tier": "1",
+            "cost": "2"
+        },
+        {
+            "tier": "2",
+            "cost": "6"
+        },
+        {
+            "tier": "3",
+            "cost": "12"
+        },
+        {
+            "tier": "4",
+            "cost": "99"
+        }
+    ],
+    "townRecruitCosts": [
+        {
+            "townSize": "Village",
+            "cost": "10"
+        },
+        {
+            "townSize": "Castle",
+            "cost": "20"
+        },
+        {
+            "townSize": "City",
+            "cost": "40"
+        }
+    ],
+    "gearRarityCosts": [
+        {
+            "gearRarity": "Common",
+            "cost": "2"
+        },
+        {
+            "gearRarity": "Uncommon",
+            "cost": "4"
+        },
+        {
+            "gearRarity": "Rare",
+            "cost": "6"
+        }
+    ],
+    "consumableRarityCosts": [
+        {
+            "consumableRarity": "Common",
+            "cost": "4"
+        },
+        {
+            "consumableRarity": "Uncommon",
+            "cost": "8"
+        },
+        {
+            "consumableRarity": "Rare",
+            "cost": "25"
+        },
+        {
+            "consumableRarity": "Legendary",
+            "cost": "60"
+        }
+    ],
+    "cardPackPrices": [
+        {
+            "packID": "0",
+            "price": "7"
+        },
+        {
+            "packID": "1",
+            "price": "10"
+        },
+        {
+            "packID": "2",
+            "price": "40"
+        },
+        {
+            "packID": "3",
+            "price": "80"
+        },
+        {
+            "packID": "4",
+            "price": "100"
+        }
+    ],
+    "consumableDropOdds": [
+        {
+            "actNumber": "1",
+            "consumable": "MinorHealth",
+            "weight": "35"
+        },
+        {
+            "actNumber": "2",
+            "consumable": "MinorHealth",
+            "weight": "25"
+        },
+        {
+            "actNumber": "3",
+            "consumable": "MinorHealth",
+            "weight": "15"
+        },
+        {
+            "actNumber": "1",
+            "consumable": "Rewind",
+            "weight": "20"
+        },
+        {
+            "actNumber": "2",
+            "consumable": "Rewind",
+            "weight": "13"
+        },
+        {
+            "actNumber": "3",
+            "consumable": "Rewind",
+            "weight": "5"
+        },
+        {
+            "actNumber": "1",
+            "consumable": "Alchemist",
+            "weight": "20"
+        },
+        {
+            "actNumber": "2",
+            "consumable": "Alchemist",
+            "weight": "15"
+        },
+        {
+            "actNumber": "3",
+            "consumable": "Alchemist",
+            "weight": "8"
+        },
+        {
+            "actNumber": "1",
+            "consumable": "MajorHealth",
+            "weight": "15"
+        },
+        {
+            "actNumber": "2",
+            "consumable": "MajorHealth",
+            "weight": "18"
+        },
+        {
+            "actNumber": "3",
+            "consumable": "MajorHealth",
+            "weight": "18"
+        },
+        {
+            "actNumber": "1",
+            "consumable": "FateshineElixir",
+            "weight": "12"
+        },
+        {
+            "actNumber": "2",
+            "consumable": "FateshineElixir",
+            "weight": "15"
+        },
+        {
+            "actNumber": "3",
+            "consumable": "FateshineElixir",
+            "weight": "15"
+        },
+        {
+            "actNumber": "1",
+            "consumable": "NewUnit",
+            "weight": "12"
+        },
+        {
+            "actNumber": "2",
+            "consumable": "NewUnit",
+            "weight": "15"
+        },
+        {
+            "actNumber": "3",
+            "consumable": "NewUnit",
+            "weight": "15"
+        },
+        {
+            "actNumber": "1",
+            "consumable": "RunewellNectar",
+            "weight": "6"
+        },
+        {
+            "actNumber": "2",
+            "consumable": "RunewellNectar",
+            "weight": "10"
+        },
+        {
+            "actNumber": "3",
+            "consumable": "RunewellNectar",
+            "weight": "14"
+        },
+        {
+            "actNumber": "1",
+            "consumable": "Prestige",
+            "weight": "8"
+        },
+        {
+            "actNumber": "2",
+            "consumable": "Prestige",
+            "weight": "12"
+        },
+        {
+            "actNumber": "3",
+            "consumable": "Prestige",
+            "weight": "16"
+        },
+        {
+            "actNumber": "1",
+            "consumable": "Duplicate",
+            "weight": "6"
+        },
+        {
+            "actNumber": "2",
+            "consumable": "Duplicate",
+            "weight": "10"
+        },
+        {
+            "actNumber": "3",
+            "consumable": "Duplicate",
+            "weight": "14"
+        },
+        {
+            "actNumber": "1",
+            "consumable": "TrialofGrasses",
+            "weight": "6"
+        },
+        {
+            "actNumber": "2",
+            "consumable": "TrialofGrasses",
+            "weight": "10"
+        },
+        {
+            "actNumber": "3",
+            "consumable": "TrialofGrasses",
+            "weight": "14"
+        },
+        {
+            "actNumber": "1",
+            "consumable": "LambSauce",
+            "weight": "1"
+        },
+        {
+            "actNumber": "2",
+            "consumable": "LambSauce",
+            "weight": "5"
+        },
+        {
+            "actNumber": "3",
+            "consumable": "LambSauce",
+            "weight": "10"
+        }
+    ],
+    "townBountyRanges": [
+        {
+            "townSize": "Village",
+            "min": "4",
+            "max": "7"
+        },
+        {
+            "townSize": "Castle",
+            "min": "9",
+            "max": "12"
+        },
+        {
+            "townSize": "City",
+            "min": "14",
+            "max": "17"
+        }
+    ],
+    "bank": {
+        "maxInterest": "5",
+        "potionRewardsOdds": "25"
+    },
+    "battleRewards": {
+        "ransomCaptivesReward": "3",
+        "skirmishReward": "3",
+        "hordeReward": "6"
+    }
+}
