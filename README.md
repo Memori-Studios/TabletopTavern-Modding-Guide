@@ -189,6 +189,8 @@ Same as `statRules` except instead of `stat`/`magnitudeKind`/`value`, there's a 
 
 Same shape as `statRules`, but keyed by `race` instead of `heroID`, and with no `condition` (a faction bonus applies to every unit once its army-composition requirement is met - today that's only "army is entirely one race," and only wired up for Sakura Dynasty).
 
+Note: only `magnitudeKind: "Flat"` is meaningful here. Unlike hero stat rules, the faction path has no current-stat value to scale against, so `PercentOfCurrentValue` is ignored - the raw `value` is added as a flat amount instead (logged as a warning). Author faction bonuses as flat values.
+
 ### Conditions
 
 Every `condition` object has a `filterKind`, and depending on which one, one or two additional fields:

@@ -1,28 +1,63 @@
 {
     "statRules": [
-        {
-            "heroID": "1",
-            "localizationKey": "heroBonusTitle2",
-            "condition": { "filterKind": "Unconditional" },
-            "stat": "ChargeBonus",
-            "magnitudeKind": "Flat",
-            "value": "5"
-        },
-        {
-            "heroID": "1",
-            "localizationKey": "heroBonusTitle1",
-            "condition": { "filterKind": "RarityTier", "requiredRarityTier": "Rare" },
-            "stat": "MeleeAttack",
-            "magnitudeKind": "Flat",
-            "value": "4"
-        },
-        {
-            "heroID": "1",
-            "localizationKey": "heroBonusTitle1",
-            "condition": { "filterKind": "RarityTier", "requiredRarityTier": "Rare" },
-            "stat": "Leadership",
-            "magnitudeKind": "Flat",
-            "value": "10"
-        }
+        { "heroID": "1", "localizationKey": "heroBonusTitle2", "condition": { "filterKind": "Unconditional" }, "stat": "ChargeBonus", "magnitudeKind": "Flat", "value": "2" },
+        { "heroID": "1", "localizationKey": "heroBonusTitle1", "condition": { "filterKind": "RarityTier", "requiredRarityTier": "Rare" }, "stat": "MeleeAttack", "magnitudeKind": "Flat", "value": "4" },
+        { "heroID": "1", "localizationKey": "heroBonusTitle1", "condition": { "filterKind": "RarityTier", "requiredRarityTier": "Rare" }, "stat": "Leadership", "magnitudeKind": "Flat", "value": "10" },
+
+        { "heroID": "2", "localizationKey": "heroBonusTitle3", "condition": { "filterKind": "UnitName", "unitNames": ["DeepwoodRangers"] }, "stat": "Accuracy", "magnitudeKind": "Flat", "value": "10" },
+        { "heroID": "2", "localizationKey": "heroBonusTitle3", "condition": { "filterKind": "UnitName", "unitNames": ["DeepwoodRangers"] }, "stat": "MissileStrength", "magnitudeKind": "Flat", "value": "4" },
+        { "heroID": "2", "localizationKey": "heroBonusTitle4", "condition": { "filterKind": "RarityTier", "requiredRarityTier": "Common" }, "stat": "MeleeDefense", "magnitudeKind": "Flat", "value": "4" },
+        { "heroID": "2", "localizationKey": "heroBonusTitle4", "condition": { "filterKind": "RarityTier", "requiredRarityTier": "Common" }, "stat": "Leadership", "magnitudeKind": "Flat", "value": "10" },
+
+        { "heroID": "3", "localizationKey": "heroBonusTitle6", "condition": { "filterKind": "UnitTag", "tag": "Goblin" }, "stat": "MeleeDefense", "magnitudeKind": "Flat", "value": "6" },
+        { "heroID": "3", "localizationKey": "heroBonusTitle6", "condition": { "filterKind": "UnitTag", "tag": "Goblin" }, "stat": "MeleeAttack", "magnitudeKind": "Flat", "value": "6" },
+
+        { "heroID": "4", "localizationKey": "heroBonusTitle7", "condition": { "filterKind": "UnitName", "unitNames": ["OrcRavagers"] }, "stat": "MeleeAttack", "magnitudeKind": "Flat", "value": "10" },
+        { "heroID": "4", "localizationKey": "heroBonusTitle7", "condition": { "filterKind": "UnitName", "unitNames": ["OrcRavagers"] }, "stat": "WeaponStrength", "magnitudeKind": "Flat", "value": "4" },
+
+        { "heroID": "5", "localizationKey": "heroBonusTitle9", "condition": { "filterKind": "UnitTag", "tag": "MeleeInfantry" }, "stat": "MeleeDefense", "magnitudeKind": "Flat", "value": "4" },
+        { "heroID": "5", "localizationKey": "heroBonusTitle9", "condition": { "filterKind": "UnitTag", "tag": "MeleeInfantry" }, "stat": "Armor", "magnitudeKind": "Flat", "value": "10" },
+
+        { "heroID": "6", "localizationKey": "heroBonusTitle11", "condition": { "filterKind": "UnitName", "unitNames": ["Shieldmaidens"] }, "stat": "MeleeDefense", "magnitudeKind": "Flat", "value": "4" },
+        { "heroID": "6", "localizationKey": "heroBonusTitle11", "condition": { "filterKind": "UnitName", "unitNames": ["Shieldmaidens"] }, "stat": "Leadership", "magnitudeKind": "Flat", "value": "10" },
+
+        { "heroID": "7", "localizationKey": "heroBonusTitle13", "condition": { "filterKind": "Unconditional" }, "stat": "ChargeBonus", "magnitudeKind": "Flat", "value": "5" },
+        { "heroID": "7", "localizationKey": "heroBonusTitle13", "condition": { "filterKind": "Unconditional" }, "stat": "MeleeAttack", "magnitudeKind": "Flat", "value": "4" },
+
+        { "heroID": "8", "localizationKey": "heroBonusTitle16", "condition": { "filterKind": "UnitName", "unitNames": ["ForestSpirits", "Treants"] }, "stat": "MeleeDefense", "magnitudeKind": "Flat", "value": "5" },
+        { "heroID": "8", "localizationKey": "heroBonusTitle16", "condition": { "filterKind": "UnitName", "unitNames": ["ForestSpirits", "Treants"] }, "stat": "WeaponStrength", "magnitudeKind": "Flat", "value": "4" },
+
+        { "heroID": "10", "localizationKey": "heroBonusTitle19", "condition": { "filterKind": "UnitName", "unitNames": ["Bloodsworn", "BloodswornKnights"] }, "stat": "Leadership", "magnitudeKind": "Flat", "value": "15" },
+        { "heroID": "10", "localizationKey": "heroBonusTitle19", "condition": { "filterKind": "UnitName", "unitNames": ["Bloodsworn", "BloodswornKnights"] }, "stat": "MeleeAttack", "magnitudeKind": "Flat", "value": "8" },
+
+        { "heroID": "11", "localizationKey": "heroBonusTitle21", "condition": { "filterKind": "Unconditional" }, "stat": "MeleeAttack", "magnitudeKind": "Flat", "value": "4" },
+
+        { "heroID": "12", "localizationKey": "heroBonusTitle24", "condition": { "filterKind": "UnitName", "unitNames": ["EmperorsArquebusiers"] }, "stat": "Accuracy", "magnitudeKind": "Flat", "value": "10" },
+        { "heroID": "12", "localizationKey": "heroBonusTitle24", "condition": { "filterKind": "UnitName", "unitNames": ["EmperorsArquebusiers"] }, "stat": "MissileStrength", "magnitudeKind": "Flat", "value": "4" },
+
+        { "heroID": "13", "localizationKey": "heroBonusTitle25", "condition": { "filterKind": "EnemyRace", "requiredEnemyRace": "Gruntkin" }, "stat": "MeleeAttack", "magnitudeKind": "Flat", "value": "10" },
+        { "heroID": "13", "localizationKey": "heroBonusTitle25", "condition": { "filterKind": "EnemyRace", "requiredEnemyRace": "Gruntkin" }, "stat": "WeaponStrength", "magnitudeKind": "Flat", "value": "4" },
+
+        { "heroID": "14", "localizationKey": "heroBonusTitle27", "condition": { "filterKind": "UnitType", "unitTypes": ["Artillery"] }, "stat": "Accuracy", "magnitudeKind": "Flat", "value": "10" },
+        { "heroID": "14", "localizationKey": "heroBonusTitle27", "condition": { "filterKind": "UnitType", "unitTypes": ["Artillery"] }, "stat": "Range", "magnitudeKind": "Flat", "value": "10" },
+        { "heroID": "14", "localizationKey": "heroBonusTitle28", "condition": { "filterKind": "UnitType", "unitTypes": ["Ranged", "Artillery"] }, "stat": "Ammunition", "magnitudeKind": "PercentOfCurrentValue", "value": "0.5" },
+
+        { "heroID": "15", "localizationKey": "heroBonusTitle29", "condition": { "filterKind": "UnitName", "unitNames": ["KoboldBrawlers", "ScalebowKobolds"] }, "stat": "Leadership", "magnitudeKind": "Flat", "value": "10" },
+        { "heroID": "15", "localizationKey": "heroBonusTitle29", "condition": { "filterKind": "UnitName", "unitNames": ["KoboldBrawlers", "ScalebowKobolds"] }, "stat": "MeleeAttack", "magnitudeKind": "Flat", "value": "4" },
+
+        { "heroID": "16", "localizationKey": "heroBonusTitle31", "condition": { "filterKind": "UnitSize", "unitSizes": ["Cavalry", "Monstrous", "SingleUnit", "Artillery"] }, "stat": "Leadership", "magnitudeKind": "Flat", "value": "10" },
+        { "heroID": "16", "localizationKey": "heroBonusTitle31", "condition": { "filterKind": "UnitSize", "unitSizes": ["Cavalry", "Monstrous", "SingleUnit", "Artillery"] }, "stat": "MeleeDefense", "magnitudeKind": "Flat", "value": "4" },
+        { "heroID": "16", "localizationKey": "heroBonusTitle32", "condition": { "filterKind": "UnitName", "unitNames": ["StegoplateGuard"] }, "stat": "Armor", "magnitudeKind": "Flat", "value": "15" },
+        { "heroID": "16", "localizationKey": "heroBonusTitle32", "condition": { "filterKind": "UnitName", "unitNames": ["StegoplateGuard"] }, "stat": "WeaponStrength", "magnitudeKind": "Flat", "value": "4" }
+    ],
+    "attributeRules": [
+        { "heroID": "4", "localizationKey": "heroBonusTitle7", "condition": { "filterKind": "UnitName", "unitNames": ["OrcRavagers"] }, "grantedAttribute": "Terrifying" },
+        { "heroID": "6", "localizationKey": "heroBonusTitle12", "condition": { "filterKind": "Unconditional" }, "grantedAttribute": "Stalwart" },
+        { "heroID": "9", "localizationKey": "heroBonusTitle18", "condition": { "filterKind": "Unconditional" }, "grantedAttribute": "Outrider" },
+        { "heroID": "13", "localizationKey": "heroBonusTitle26", "condition": { "filterKind": "UnitName", "unitNames": ["Cragflayers"] }, "grantedAttribute": "Rage" }
+    ],
+    "factionRules": [
+        { "race": "SakuraDynasty", "localizationKey": "SakuraDynastyBonusDescription", "stat": "MeleeAttack", "magnitudeKind": "Flat", "value": "4" },
+        { "race": "SakuraDynasty", "localizationKey": "SakuraDynastyBonusDescription", "stat": "Leadership", "magnitudeKind": "Flat", "value": "20" }
     ]
 }
