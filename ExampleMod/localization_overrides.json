@@ -1,0 +1,6 @@
+{
+    "overrides": [
+        { "locale": "en", "key": "heroBonusTitle2", "text": "Inspiring Presence" },
+        { "locale": "en", "key": "exampleCustomBonusName", "text": "Example Custom Bonus" }
+    ]
+}

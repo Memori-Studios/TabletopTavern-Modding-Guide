@@ -1,6 +1,6 @@
 # Tabletop Tavern Modding Guide
 
-Tabletop Tavern supports mods that override unit stats, faction colors, hero data, hero/faction battle bonuses, gear effect magnitudes, shop/economy pricing, and enemy army/garrison generation — no code required, just plain text files. This guide covers the file formats. See the [`ExampleMod/`](ExampleMod/) folder for a complete, working example you can copy and edit.
+Tabletop Tavern supports mods that override unit stats, faction colors, hero data, hero/faction battle bonuses, gear effect magnitudes, shop/economy pricing, enemy army/garrison generation, and localized text — no code required, just plain text files. This guide covers the file formats. See the [`ExampleMod/`](ExampleMod/) folder for a complete, working example you can copy and edit.
 
 ## Where mods go
 
@@ -21,9 +21,10 @@ Mods/
         gear_overrides.json   <- optional
         army_generation_rules.json <- optional
         economy_overrides.json <- optional
+        localization_overrides.json <- optional
 ```
 
-A folder needs `mod.json` to be recognized as a mod at all — the seven override files are each optional, include only the ones you need. Folder names starting with `_` (like `_Template`) are reserved and never loaded as mods.
+A folder needs `mod.json` to be recognized as a mod at all — the eight override files are each optional, include only the ones you need. Folder names starting with `_` (like `_Template`) are reserved and never loaded as mods.
 
 New mods are enabled automatically the first time the game finds them. Use the in-game **Mods** menu (from the main menu) to enable/disable mods and reorder them — when more than one mod changes the same thing, the one lower in the list wins. **Changes apply the next time you restart the game**, not live.
 
@@ -395,6 +396,33 @@ A single object, not a list. Each field optional independently.
 | `ransomCaptivesReward` | int | gold per captive ransomed |
 | `skirmishReward` | int | base gold for winning a Skirmish engagement |
 | `hordeReward` | int | base gold for winning a Horde engagement |
+
+## `localization_overrides.json` — text and translations
+
+Replaces the display text behind any localization key, per language. This is what lets you rename or re-translate things that are shown as text — including the **bonus names** referenced by `localizationKey` in `hero_bonus_rules.json`, plus any other UI string in the game's main table.
+
+A flat list of entries, each with a `locale`, a `key`, and the `text` to show. (It's a flat list rather than nested by language because of how the game parses these files.)
+
+```json
+{
+    "overrides": [
+        { "locale": "en", "key": "heroBonusTitle2", "text": "Inspiring Presence" },
+        { "locale": "en", "key": "exampleCustomBonusName", "text": "Example Custom Bonus" }
+    ]
+}
+```
+
+| Field | Type | Notes |
+|---|---|---|
+| `locale` | string | language code the text applies to - `en` (English), `zh` (Simplified Chinese), `zh-Hant` (Traditional Chinese), `ja` (Japanese), `ko` (Korean). An override only shows while that language is selected; supply one entry per language you want to cover. |
+| `key` | string | the localization key to replace. Can be an existing key (to rename/retranslate something the game already shows) or a brand-new key of your own. |
+| `text` | string | the text to display. |
+
+**Overriding an existing key** changes that text everywhere it appears in-game. For example, `heroBonusTitle2` is the name of Edric Valeward's charge bonus, so the entry above renames it wherever it's shown.
+
+**Inventing a new key** is what makes custom bonuses possible. `hero_bonus_rules.json` requires a `localizationKey` for every rule, and normally you'd have to reuse an existing hero's bonus name. Instead, point a rule at your own key (e.g. `"localizationKey": "exampleCustomBonusName"`) and define that key here — now your bonus displays its own name. For a name-only entry like a bonus title, just the name is enough; the numeric magnitude is drawn separately by the game.
+
+Overrides match purely by `key`, independent of which in-game text table asked for it, and only the game's main text table is covered (event and lore text can't be overridden this way yet). A key you define but never reference shows up nowhere - it's harmless. Missing the text for a language just falls back to the game's built-in text for that language, so a mod that only ships `en` entries still works in every language (untranslated keys simply read as normal).
 
 ## Testing your mod
 
