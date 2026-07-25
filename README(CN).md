@@ -21,6 +21,7 @@ Mods/
         gear_overrides.json   <- optional
         army_generation_rules.json <- optional
         economy_overrides.json <- optional
+        race_bonus_overrides.json <- optional
 ```
 
 一个文件夹必须包含 `mod.json` 才会被识别为模组——四个覆盖文件都是可选的，只需包含你需要的文件即可。以下划线 `_` 开头的文件夹名（如 `_Template`）为保留名称，不会被加载为模组。
@@ -393,6 +394,106 @@ Available fields:
 | `ransomCaptivesReward` | int | 每名俘虏的赎金 |
 | `skirmishReward` | int | 赢得一场遭遇战的基础金币 |
 | `hordeReward` | int | 赢得一场大战的基础金币 |
+
+## `race_bonus_overrides.json` — 种族被动调整
+
+每个可玩种族都有一项独特的战场被动（哥布林族的“碾压狂潮”、血色宫廷的无惧等等）。此文件可以让你重新平衡这些被动的**数值**——加成有多大、可叠加多少层、积累有多快、持续多久。它**不能**改变被动的触发方式，也不能创造新的被动；触发逻辑是固定的，你只能调整它的数值。
+
+每个种族是一个独立的区块，区块内的每个字段都是可选的——只设置你想改动的数值，其余保持默认值。整个种族区块可以省略，以保持该种族不变。
+
+```json
+{
+    "gruntkin":        { "weaponStrengthPerStack": "8", "maxStacks": "5" },
+    "drakosaurBrood":  { "weaponStrengthPerStack": "10" },
+    "taelindorForest": { "rangedBonusCap": "30" },
+    "sakuraDynasty":   { "meleeAttackPerStage": "6", "maxStages": "4" },
+    "deepstoneHold":   { "weaponStrengthPerDeath": "3" },
+    "ironLegion":      { "clampDurationSeconds": "15" },
+    "ravenHost":       { "meleeAttackBonus": "25", "durationSeconds": "25" },
+    "sanguineCourt":   { "immuneToTerror": "false" }
+}
+```
+
+计时/阈值类字段（`updateInterval`、`secondsPerStage`、`durationSeconds`、`clampDurationSeconds`、`healthThreshold`）必须**大于零**——无效的值会被拒绝（记录为警告）并保留默认值。加成数值以及叠加层数/阶段上限可以设为 `0`，从而实质上关闭该被动。
+
+### `gruntkin` — 碾压狂潮
+
+每支生命值高于阈值的其他哥布林小队，都会为整支军队提供可叠加的武器强度加成。
+
+| 字段 | 类型 | 默认值 | 备注 |
+|---|---|---|---|
+| `weaponStrengthPerStack` | int | 5 | 每支符合条件的友军提供的武器强度 |
+| `maxStacks` | int | 4 | 叠加上限（默认最高 +20） |
+| `healthThreshold` | float | 0.5 | 小队需超过的最大生命值比例（0.5 = 高于 50%） |
+| `updateInterval` | float | 1.0 | 重新计算的间隔秒数 |
+
+### `drakosaurBrood` — 群体本能
+
+每有一支其他龙兽小队攻击同一敌方小队，本小队就获得可叠加的武器强度加成。
+
+| 字段 | 类型 | 默认值 | 备注 |
+|---|---|---|---|
+| `weaponStrengthPerStack` | int | 8 | 每支协同攻击的小队提供的武器强度 |
+| `maxStacks` | int | 2 | 叠加上限（默认最高 +16） |
+| `updateInterval` | float | 0.5 | 重新计算的间隔秒数 |
+
+### `taelindorForest` — 猎手的耐心
+
+小队静止不动时，每一跳都会积累加成直至上限；远程小队积累命中，近战小队积累武器强度。移动或冲锋会清除已积累的加成。
+
+| 字段 | 类型 | 默认值 | 备注 |
+|---|---|---|---|
+| `rangedBonusPerTick` | int | 3 | 每跳获得的命中（远程小队） |
+| `meleeBonusPerTick` | int | 2 | 每跳获得的武器强度（近战小队） |
+| `rangedBonusCap` | int | 20 | 命中积累上限 |
+| `meleeBonusCap` | int | 12 | 武器强度积累上限 |
+| `updateInterval` | float | 1.0 | 每跳的秒数 |
+
+### `sakuraDynasty` — 剑圣之眼
+
+持续的近战会分阶段提供近战攻击；脱离战斗则重置。
+
+| 字段 | 类型 | 默认值 | 备注 |
+|---|---|---|---|
+| `meleeAttackPerStage` | int | 5 | 每达到一个阶段提供的近战攻击 |
+| `secondsPerStage` | float | 10.0 | 每个阶段所需的持续战斗秒数 |
+| `maxStages` | int | 3 | 阶段上限（默认 30 秒后最高 +15） |
+| `updateInterval` | float | 1.0 | 检查的间隔秒数 |
+
+### `deepstoneHold` — 誓约铭刻
+
+小队中每有一名单位阵亡，都会永久强化幸存者。整场战斗中无上限叠加。
+
+| 字段 | 类型 | 默认值 | 备注 |
+|---|---|---|---|
+| `weaponStrengthPerDeath` | int | 2 | 每次阵亡为幸存者永久提供的武器强度 |
+
+### `ironLegion` — 钢铁意志
+
+当小队首次进入“动摇”士气时，其士气会在一段缓冲时间内被固定在该状态而不崩溃。（被固定到的士气档位是固定的，无法修改——只有持续时间可调。）
+
+| 字段 | 类型 | 默认值 | 备注 |
+|---|---|---|---|
+| `clampDurationSeconds` | float | 10.0 | 士气被固定在“动摇”的时长 |
+
+### `ravenHost` — 亡者哀鸣
+
+当一支渡鸦军团小队倒下时，同队幸存的渡鸦军团小队获得临时的近战攻击加成。之后再有小队倒下会刷新计时，但不会叠加加成。
+
+| 字段 | 类型 | 默认值 | 备注 |
+|---|---|---|---|
+| `meleeAttackBonus` | int | 20 | 为幸存者提供的近战攻击 |
+| `durationSeconds` | float | 20.0 | 加成的持续时间 |
+
+### `sanguineCourt` — 无惧免疫
+
+血色宫廷的小队会无视若干士气惩罚。这些是开/关的开关，而非数值——将某项设为 `false` 即可移除该免疫。
+
+| 字段 | 类型 | 默认值 | 备注 |
+|---|---|---|---|
+| `immuneToFlankMorale` | bool | true | 免疫被侧翼包抄带来的士气惩罚 |
+| `immuneToTerror` | bool | true | 免疫恐惧（来自造成恐惧的敌人） |
+| `immuneToRetreatingAlliesMorale` | bool | true | 免疫附近友军撤退带来的士气惩罚 |
 
 ## 测试你的模组
 

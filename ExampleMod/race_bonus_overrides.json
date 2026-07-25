@@ -1,0 +1,7 @@
+{
+    "gruntkin": { "weaponStrengthPerStack": "8", "maxStacks": "5" },
+    "drakosaurBrood": { "weaponStrengthPerStack": "10" },
+    "sakuraDynasty": { "meleeAttackPerStage": "6", "maxStages": "4" },
+    "ironLegion": { "clampDurationSeconds": "15" },
+    "sanguineCourt": { "immuneToTerror": "false" }
+}

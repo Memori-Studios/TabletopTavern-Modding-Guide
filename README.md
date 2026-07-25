@@ -1,6 +1,6 @@
 # Tabletop Tavern Modding Guide
 
-Tabletop Tavern supports mods that override unit stats, faction colors, hero data, hero/faction battle bonuses, gear effect magnitudes, shop/economy pricing, enemy army/garrison generation, and localized text — no code required, just plain text files. This guide covers the file formats. See the [`ExampleMod/`](ExampleMod/) folder for a complete, working example you can copy and edit.
+Tabletop Tavern supports mods that override unit stats, faction colors, hero data, hero/faction battle bonuses, gear effect magnitudes, shop/economy pricing, enemy army/garrison generation, race passive tuning, and localized text — no code required, just plain text files. This guide covers the file formats. See the [`ExampleMod/`](ExampleMod/) folder for a complete, working example you can copy and edit.
 
 ## Where mods go
 
@@ -21,10 +21,11 @@ Mods/
         gear_overrides.json   <- optional
         army_generation_rules.json <- optional
         economy_overrides.json <- optional
+        race_bonus_overrides.json <- optional
         localization_overrides.json <- optional
 ```
 
-A folder needs `mod.json` to be recognized as a mod at all — the eight override files are each optional, include only the ones you need. Folder names starting with `_` (like `_Template`) are reserved and never loaded as mods.
+A folder needs `mod.json` to be recognized as a mod at all — the nine override files are each optional, include only the ones you need. Folder names starting with `_` (like `_Template`) are reserved and never loaded as mods.
 
 New mods are enabled automatically the first time the game finds them. Use the in-game **Mods** menu (from the main menu) to enable/disable mods and reorder them — when more than one mod changes the same thing, the one lower in the list wins. **Changes apply the next time you restart the game**, not live.
 
@@ -423,6 +424,106 @@ A flat list of entries, each with a `locale`, a `key`, and the `text` to show. (
 **Inventing a new key** is what makes custom bonuses possible. `hero_bonus_rules.json` requires a `localizationKey` for every rule, and normally you'd have to reuse an existing hero's bonus name. Instead, point a rule at your own key (e.g. `"localizationKey": "exampleCustomBonusName"`) and define that key here — now your bonus displays its own name. For a name-only entry like a bonus title, just the name is enough; the numeric magnitude is drawn separately by the game.
 
 Overrides match purely by `key`, independent of which in-game text table asked for it, and only the game's main text table is covered (event and lore text can't be overridden this way yet). A key you define but never reference shows up nowhere - it's harmless. Missing the text for a language just falls back to the game's built-in text for that language, so a mod that only ships `en` entries still works in every language (untranslated keys simply read as normal).
+
+## `race_bonus_overrides.json` — race passive tuning
+
+Every playable race has a unique battlefield passive (Gruntkin's Crashing Horde, Sanguine Court's fearlessness, etc.). This file lets you rebalance the **numbers** of those passives — how big each bonus is, how many times it stacks, how fast it ramps, how long it lasts. It does **not** let you change *how* a passive triggers or invent a new one; the trigger logic stays fixed, you're only tuning its values.
+
+Each race is its own block, and every field inside a block is optional — set only the values you want to change, the rest keep their defaults. Omit a race block entirely to leave that race untouched.
+
+```json
+{
+    "gruntkin":        { "weaponStrengthPerStack": "8", "maxStacks": "5" },
+    "drakosaurBrood":  { "weaponStrengthPerStack": "10" },
+    "taelindorForest": { "rangedBonusCap": "30" },
+    "sakuraDynasty":   { "meleeAttackPerStage": "6", "maxStages": "4" },
+    "deepstoneHold":   { "weaponStrengthPerDeath": "3" },
+    "ironLegion":      { "clampDurationSeconds": "15" },
+    "ravenHost":       { "meleeAttackBonus": "25", "durationSeconds": "25" },
+    "sanguineCourt":   { "immuneToTerror": "false" }
+}
+```
+
+Timing/threshold fields (`updateInterval`, `secondsPerStage`, `durationSeconds`, `clampDurationSeconds`, `healthThreshold`) must be **greater than zero** — an invalid value is rejected (logged as a warning) and the default is kept. Bonus magnitudes and stack/stage caps may be set to `0` to effectively switch a passive off.
+
+### `gruntkin` — Crashing Horde
+
+Each other living Gruntkin squad above the health threshold grants a stacking WeaponStrength bonus to the whole army.
+
+| Field | Type | Default | Notes |
+|---|---|---|---|
+| `weaponStrengthPerStack` | int | 5 | WeaponStrength added per qualifying ally |
+| `maxStacks` | int | 4 | stack cap (so default max is +20) |
+| `healthThreshold` | float | 0.5 | fraction of max HP a squad must exceed to count (0.5 = above 50%) |
+| `updateInterval` | float | 1.0 | seconds between re-evaluations |
+
+### `drakosaurBrood` — Pack Instinct
+
+For each other Drakosaur squad attacking the same enemy squad, this squad gains a stacking WeaponStrength bonus.
+
+| Field | Type | Default | Notes |
+|---|---|---|---|
+| `weaponStrengthPerStack` | int | 8 | WeaponStrength per co-attacking squad |
+| `maxStacks` | int | 2 | stack cap (default max +16) |
+| `updateInterval` | float | 0.5 | seconds between re-evaluations |
+
+### `taelindorForest` — Hunter's Patience
+
+While a squad holds still, it accrues a bonus each tick up to a cap; ranged squads build Accuracy, melee squads build WeaponStrength. Moving or charging clears the accrued bonus.
+
+| Field | Type | Default | Notes |
+|---|---|---|---|
+| `rangedBonusPerTick` | int | 3 | Accuracy gained per tick (ranged squads) |
+| `meleeBonusPerTick` | int | 2 | WeaponStrength gained per tick (melee squads) |
+| `rangedBonusCap` | int | 20 | max accrued Accuracy |
+| `meleeBonusCap` | int | 12 | max accrued WeaponStrength |
+| `updateInterval` | float | 1.0 | seconds per tick |
+
+### `sakuraDynasty` — Kensei's Eye
+
+Continuous melee combat grants MeleeAttack in stages; leaving combat resets it.
+
+| Field | Type | Default | Notes |
+|---|---|---|---|
+| `meleeAttackPerStage` | int | 5 | MeleeAttack per stage reached |
+| `secondsPerStage` | float | 10.0 | continuous-combat seconds needed per stage |
+| `maxStages` | int | 3 | stage cap (default max +15 after 30s) |
+| `updateInterval` | float | 1.0 | seconds between checks |
+
+### `deepstoneHold` — Oathcarved
+
+Every unit death in the squad permanently buffs the survivors. Stacks with no cap for the whole battle.
+
+| Field | Type | Default | Notes |
+|---|---|---|---|
+| `weaponStrengthPerDeath` | int | 2 | permanent WeaponStrength granted to survivors per death |
+
+### `ironLegion` — Iron Resolve
+
+The first time a squad reaches Wavering morale, its morale is held there for a grace period instead of breaking. (The morale level it's pinned to is fixed and not moddable — only the duration is.)
+
+| Field | Type | Default | Notes |
+|---|---|---|---|
+| `clampDurationSeconds` | float | 10.0 | how long morale is held at Wavering |
+
+### `ravenHost` — Deathcry
+
+When a Raven Host squad falls, surviving same-team Raven Host squads gain a temporary MeleeAttack bonus. A later loss refreshes the timer but doesn't stack the bonus.
+
+| Field | Type | Default | Notes |
+|---|---|---|---|
+| `meleeAttackBonus` | int | 20 | MeleeAttack granted to survivors |
+| `durationSeconds` | float | 20.0 | how long the bonus lasts |
+
+### `sanguineCourt` — fearless immunities
+
+Sanguine Court squads ignore several morale penalties. These are on/off toggles rather than numbers — set one to `false` to remove that immunity.
+
+| Field | Type | Default | Notes |
+|---|---|---|---|
+| `immuneToFlankMorale` | bool | true | immune to the morale penalty from being flanked |
+| `immuneToTerror` | bool | true | immune to terror (fear from terrifying enemies) |
+| `immuneToRetreatingAlliesMorale` | bool | true | immune to the morale penalty from nearby allies retreating |
 
 ## Testing your mod
 
