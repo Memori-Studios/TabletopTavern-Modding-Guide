@@ -1,6 +1,6 @@
 # 桌上谈兵模组制作指南
 
-桌上谈兵支持通过模组来覆盖单位属性、派系颜色、英雄数据以及英雄/派系的战斗加成——无需编写代码，只需纯文本文件即可。本指南将介绍这些文件的格式。请参阅 [`ExampleMod/`](ExampleMod/) 文件夹，里面有一个完整可用的示例，你可以直接复制并修改。
+桌上谈兵支持通过模组来覆盖单位属性、派系颜色、英雄数据、英雄/派系的战斗加成、装备效果数值、商店与经济定价、敌方军队与驻军生成、种族被动调整以及本地化文本——无需编写代码，只需纯文本文件即可。本指南将介绍这些文件的格式。请参阅 [`ExampleMod/`](ExampleMod/) 文件夹，里面有一个完整可用的示例，你可以直接复制并修改。
 
 ## 模组的存放位置
 
@@ -22,9 +22,10 @@ Mods/
         army_generation_rules.json <- optional
         economy_overrides.json <- optional
         race_bonus_overrides.json <- optional
+        localization_overrides.json <- optional
 ```
 
-一个文件夹必须包含 `mod.json` 才会被识别为模组——四个覆盖文件都是可选的，只需包含你需要的文件即可。以下划线 `_` 开头的文件夹名（如 `_Template`）为保留名称，不会被加载为模组。
+一个文件夹必须包含 `mod.json` 才会被识别为模组——这九个覆盖文件都是可选的，只需包含你需要的文件即可。以下划线 `_` 开头的文件夹名（如 `_Template`）为保留名称，不会被加载为模组。
 
 新模组在游戏首次发现时会自动启用。你可以使用游戏内的 **模组** 菜单（从主菜单进入）来启用/禁用模组并调整其加载顺序——当多个模组修改了相同的内容时，列表中位置更靠下的模组内容会覆盖位置更靠上的模组。 **所有改动不会立即生效，需要在下一次重启游戏时才会应用。**
 
@@ -67,7 +68,7 @@ Mods/
 
 | 字段 | 类型 | 备注 |
 |---|---|---|
-| `unitType` | enum | 近战`Melee`, 远程`Ranged`, 混合`Hybrid`, 炮兵`Artillery`, 建筑`Structure` |
+| `unitType` | enum | 近战`Melee`, 远程`Ranged`, 混合`Hybrid`, 炮兵`Artillery`, 建筑`Structure`。`Hybrid` 单位既能射击也能顶在近战线上：它们部署在前排，不会风筝走位，获得近战声望加成与近战装备，在自动结算战斗中使用近战数据作战，但仍然携带弓或投掷武器进行远程攻击。它们不会获得任何弹药加成，因此请给它们较小的 `ammunition` 数值。原版的混合单位为 `Berserkers`、`Cragflayers` 和 `KunoichiInfiltrators`。 |
 | `unitSize` | enum | 步兵`Infantry`, 骑兵`Cavalry`, 巨兽`Monstrous`, 单个单位`SingleUnit`, 炮兵`Artillery` |
 | `rarityTier` | enum | 普通`Common`, 罕见`Uncommon`, 稀有`Rare`, 传说`Legendary` |
 | `race` | enum | `IronLegion`, `Gruntkin`, `RavenHost`, `TaelindorForest`, `SanguineCourt`, `SakuraDynasty`, `DeepstoneHold`, `DrakosaurBrood`, `Special` - 将该单位移至该派系的收藏/军表中。不会改变单位的模型、图标或肖像，这些都会保持其原本的样子。 |
@@ -75,6 +76,7 @@ Mods/
 | `hitPointsPerUnit`, `baseUnitCount` | int | 必须为正数——零值或负值会被拒绝，并保留原有数值 |
 | `speed`, `leadership`, `baseRange`, `attackAccuracy`, `attackCooldown`, `rateOfFire`, `explosionRange`, `explosionForce` | float | |
 | `none`, `standardShields`, `armorPiercing`, `antiInfantry`, `antiLarge`, `terrifying`, `stalwart`, `outrider`, `swampCreature`, `forestDweller`, `chickenFlight`, `ethereal`, `bloodFrenzy`, `rage`, `emblazing`, `unstoppable`, `heavyShields`, `throwingAxes`, `armorSundering`, `monsterSlayer`, `forgefuryTempering`, `flamingAmmo`, `dragonsHoard`, `backStabbers`, `thickScales` | bool | 填写 `"true"` 或 `"false"` |
+| `shotDiscipline`, `overdraw`, `steadyAim`, `demolisher`, `powderReserves`, `deepQuivers` | bool | 远程特性——`shotDiscipline`（装填速度提升 20%）和 `overdraw`（射程 +15%）需要能够射击的单位；`steadyAim`（免除自由射击模式的命中率惩罚）对 `Ranged` 与 `Hybrid` 生效，但对 `Artillery` 无效，因为炮兵没有可切换的射击模式；`demolisher`（爆炸伤害与范围 +30%）和 `powderReserves`（弹药 +50%）仅对 `Artillery` 生效；`deepQuivers`（弹药 +500）仅对 `Ranged` 生效，对 `Hybrid` 无效，因为它们的弹药只是少量投掷武器 |
 
 ### 单位名称参考
 
@@ -135,18 +137,30 @@ Mods/
 }
 ```
 
-Available fields:
+可用字段：
 
 | 字段 | 类型 | 备注 |
 |---|---|---|
-| `heroName`, `heroDescription`, `heroPrefabName` | string | 这些是本地化键值，而非直接的显示文本|
-| `heroBonusDescription` | string array | |
+| `heroName`, `heroDescription` | string | 这些是本地化键值，而非直接的显示文本 |
+| `heroPrefabName` | string | 尽管名称如此，它同样是本地化键值——对应英雄的背景故事文本 |
+| `heroBonusDescription` | string array | 本地化键值，**必须正好两个条目**，详见下文 |
 | `unlockCondition`, `demoUnlockCondition` | enum | `None`, `NotAvailableInDemo`, `DiscordExclusive`, `NewsletterExclusive`, `HeroCompletion` |
 | `startingGold` | int | |
 | `signatureUnit` | enum (`UnitName`) | 必须是已存在的单位 |
 | `startingArmyUnits` | array of `UnitName` | 任何无法识别的单位名称条目都会被跳过，其余条目仍然生效 |
 
 `heroID` 和英雄的 `race`（派系）无法更改——`heroID` 是查找键，而每个英雄在战役生成时已与其派系永久绑定。
+
+### 修改英雄文本
+
+由于这些字段是键值而非文本，修改玩家实际读到的内容有两种方式，通常你需要的是第一种：
+
+- **若只想改写现有英雄的文字**，完全不用动 `hero_overrides.json`，改为在 [`localization_overrides.json`](#localization_overridesjson--文本与翻译) 中覆盖*该键值背后的文本*。查出英雄当前使用的键值（`_Template/` 中导出的模板文件已列出），然后为该键值填入你的新文本。
+- **若想让英雄指向你自己新建的键值**，则需要在此处设置字段，*并且*在 `localization_overrides.json` 中定义该键值。这两步必须同时进行：一个没有对应文本的键值会直接显示为键值本身，并且每次界面刷新都会输出一条报错。
+
+`heroBonusDescription` 还有一条额外规则。游戏以 `名称: 描述` 的形式显示每条加成，但英雄只存储*描述*键值，**名称键值是由它推导出来的**——把键值中的 `heroBonusDescription` 替换为 `heroBonusTitle`。因此 `heroBonusDescription1` 对应 `heroBonusTitle1`。如果你自创的键值不包含 `heroBonusDescription` 这段文本，就无法推导出名称，该加成将只显示描述、没有名称前缀。若想同时自定义名称，请遵循该命名约定，例如使用 `myModHeroBonusDescriptionA` 与 `myModHeroBonusTitleA`，并同时定义两者。
+
+该数组必须正好包含两个条目，且都不能为空。否则整个字段会被拒绝并输出警告，英雄保留原有的加成键值。
 
 ## `hero_bonus_rules.json` — 英雄与派系战斗加成
 
@@ -199,7 +213,7 @@ Available fields:
 | `Unconditional` | none | 适用于所有单位 |
 | `RarityTier` | `requiredRarityTier`: `Common`/`Uncommon`/`Rare`/`Legendary` | 仅适用于该稀有度的单位 |
 | `UnitName` | `unitNames`: array of `UnitName` | 仅适用于列表中列出的单位 |
-| `UnitTag` | `tag`: string | 适用于匹配指定标签的单位——目前可用的标签有 `"Goblin"` 和  `"MeleeInfantry"` |
+| `UnitTag` | `tag`: string | 适用于匹配指定标签的单位——目前可用的标签有 `"Goblin"` 和  `"MeleeInfantry"`（该标签同时涵盖 `Hybrid` 与 `Melee` 单位） |
 | `UnitType` | `unitTypes`: array of `UnitType` | 适用于所列类型的单位 |
 | `UnitSize` | `unitSizes`: array of `UnitSize` | 适用于所列规模的单位 |
 | `EnemyRace` | `requiredEnemyRace`: a `Race` | 仅在与该派系作战时生效 |
@@ -394,6 +408,38 @@ Available fields:
 | `ransomCaptivesReward` | int | 每名俘虏的赎金 |
 | `skirmishReward` | int | 赢得一场遭遇战的基础金币 |
 | `hordeReward` | int | 赢得一场大战的基础金币 |
+
+## `localization_overrides.json` — 文本与翻译
+
+按语言替换任意本地化键值背后的显示文本。游戏中显示为文本的内容都可以借此重命名或重新翻译——包括 `hero_bonus_rules.json` 中由 `localizationKey` 引用的**加成名称**、`hero_overrides.json` 中的英雄姓名/描述/背景故事键值，以及其他任何界面、事件或背景故事文本。
+
+这是一个扁平的条目列表，每个条目包含 `locale`（语言）、`key`（键值）和要显示的 `text`（文本）。（之所以采用扁平列表而非按语言嵌套，是由游戏解析这些文件的方式决定的。）
+
+```json
+{
+    "overrides": [
+        { "locale": "en", "key": "heroBonusTitle2", "text": "Inspiring Presence" },
+        { "locale": "zh", "key": "heroBonusTitle2", "text": "鼓舞人心" },
+        { "locale": "en", "key": "exampleCustomBonusName", "text": "Example Custom Bonus" }
+    ]
+}
+```
+
+| 字段 | 类型 | 备注 |
+|---|---|---|
+| `locale` | string | 该文本适用的语言代码。想覆盖哪种语言就为其各添加一个条目——支持的代码见下方列表。 |
+| `key` | string | 要替换的本地化键值。可以是已有的键值（用于重命名或重新翻译游戏中已显示的内容），也可以是你自创的全新键值。 |
+| `text` | string | 要显示的文本。 |
+
+支持的语言代码：`en`（英语）、`de`（德语）、`es`（西班牙语）、`fr`（法语）、`ja`（日语）、`ko`（韩语）、`ru`（俄语）、`zh`（简体中文）、`zh-Hant`（繁体中文）。代码必须完全匹配。
+
+**覆盖已有键值**会改变该文本在游戏中出现的所有位置。例如 `heroBonusTitle2` 是埃德里克·维尔沃德冲锋加成的名称，上面的条目会在任何显示它的地方将其重命名。
+
+**自创新键值**才是实现自定义加成的关键。`hero_bonus_rules.json` 要求每条规则都有一个 `localizationKey`，通常你只能复用某位现有英雄的加成名称。改为让规则指向你自己的键值（例如 `"localizationKey": "exampleCustomBonusName"`），并在此处定义该键值——这样你的加成就有了专属名称。对于加成标题这类纯名称条目，只写名称即可，数值部分由游戏单独绘制。
+
+**语言回退。** 如果玩家所用语言没有某个键值的条目，游戏会回退到你为同一键值提供的 `en` 条目，之后才会回退到游戏自带的文本。因此，只提供英文的模组对所有玩家都能生效——被重命名的英雄在任何语言下都会保留新名称，而不会退回原名。想要翻译，再为其他语言补充条目即可。
+
+覆盖只按 `key` 匹配，与是哪个游戏内文本表发起的请求无关。主界面文本表、事件文本和背景故事文本都同样适用。反过来说：如果同一个键值存在于多个表中，一条覆盖条目会同时改变它们。定义了却从未被引用的键值不会显示在任何地方，也无害。
 
 ## `race_bonus_overrides.json` — 种族被动调整
 

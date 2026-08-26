@@ -1,6 +1,12 @@
 {
     "overrides": [
         { "locale": "en", "key": "heroBonusTitle2", "text": "Inspiring Presence" },
-        { "locale": "en", "key": "exampleCustomBonusName", "text": "Example Custom Bonus" }
+        { "locale": "en", "key": "heroBonusDescription2", "text": "All units gain +2 [Charge Bonus]" },
+
+        { "locale": "en", "key": "exampleCustomBonusName", "text": "Example Custom Bonus" },
+
+        { "locale": "en", "key": "heroName1", "text": "Edric the Unyielding" },
+        { "locale": "en", "key": "heroDescription1", "text": "A banner-captain who has never once ordered a retreat." },
+        { "locale": "zh", "key": "heroName1", "text": "不屈者埃德里克" }
     ]
 }

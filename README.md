@@ -68,7 +68,7 @@ Available fields:
 
 | Field | Type | Notes |
 |---|---|---|
-| `unitType` | enum | `Melee`, `Ranged`, `Hybrid`, `Artillery`, `Structure` |
+| `unitType` | enum | `Melee`, `Ranged`, `Hybrid`, `Artillery`, `Structure`. `Hybrid` units both shoot and hold the melee line: they deploy in the front row, don't kite, gain melee prestige stats and melee gear, and fight with their melee stats in auto-resolved battles - but they still carry a bow or throwing weapon and fire at range. They receive no ammunition bonuses of any kind, so give them a small `ammunition` pool. The stock hybrids are `Berserkers`, `Cragflayers` and `KunoichiInfiltrators`. |
 | `unitSize` | enum | `Infantry`, `Cavalry`, `Monstrous`, `SingleUnit`, `Artillery` |
 | `rarityTier` | enum | `Common`, `Uncommon`, `Rare`, `Legendary` |
 | `race` | enum | `IronLegion`, `Gruntkin`, `RavenHost`, `TaelindorForest`, `SanguineCourt`, `SakuraDynasty`, `DeepstoneHold`, `DrakosaurBrood`, `Special` - moves the unit to that faction's collection/army-builder roster. Doesn't change the unit's model, icon, or portrait, which stay whatever they were originally. |
@@ -76,6 +76,7 @@ Available fields:
 | `hitPointsPerUnit`, `baseUnitCount` | int | must be positive - a zero or negative value is rejected and the previous value is kept |
 | `speed`, `leadership`, `baseRange`, `attackAccuracy`, `attackCooldown`, `rateOfFire`, `explosionRange`, `explosionForce` | float | |
 | `none`, `standardShields`, `armorPiercing`, `antiInfantry`, `antiLarge`, `terrifying`, `stalwart`, `outrider`, `swampCreature`, `forestDweller`, `chickenFlight`, `ethereal`, `bloodFrenzy`, `rage`, `emblazing`, `unstoppable`, `heavyShields`, `throwingAxes`, `armorSundering`, `monsterSlayer`, `forgefuryTempering`, `flamingAmmo`, `dragonsHoard`, `backStabbers`, `thickScales` | bool | write `"true"` or `"false"` |
+| `shotDiscipline`, `overdraw`, `steadyAim`, `demolisher`, `powderReserves`, `deepQuivers` | bool | shooter traits - `shotDiscipline` (20% faster reload) and `overdraw` (+15% range) need a unit that shoots; `steadyAim` (no Fire-at-Will accuracy penalty) does something on `Ranged` and `Hybrid`, but not `Artillery`, which has no fire mode to switch; `demolisher` (+30% explosion damage and radius) and `powderReserves` (+50% ammunition) only do anything on `Artillery`; `deepQuivers` (+500 ammunition) only does anything on `Ranged` - it is ignored on `Hybrid`, whose ammo pool is a token handful of throwing weapons |
 
 ### Unit name reference
 
@@ -140,14 +141,38 @@ Available fields:
 
 | Field | Type | Notes |
 |---|---|---|
-| `heroName`, `heroDescription`, `heroPrefabName` | string | these are localization keys, not display text directly |
-| `heroBonusDescription` | string array | |
+| `heroName`, `heroDescription` | string | localization keys, not display text directly |
+| `heroPrefabName` | string | also a localization key, despite the name - it's the key for the hero's lore paragraph |
+| `heroBonusDescription` | string array | localization keys, **exactly two entries** - see below |
 | `unlockCondition`, `demoUnlockCondition` | enum | `None`, `NotAvailableInDemo`, `DiscordExclusive`, `NewsletterExclusive`, `HeroCompletion` |
 | `startingGold` | int | |
 | `signatureUnit` | enum (`UnitName`) | must be an existing unit |
 | `startingArmyUnits` | array of `UnitName` | any entry that isn't a recognized unit name is skipped, the rest still apply |
 
 `heroID` and the hero's `race` cannot be changed — `heroID` is the lookup key, and each hero is permanently tied to their race for campaign generation.
+
+### Changing a hero's text
+
+Because these fields are keys rather than text, there are two different ways to change what a player reads, and you usually want the first:
+
+- **To reword an existing hero**, leave `hero_overrides.json` alone entirely and override the *text behind the key* in [`localization_overrides.json`](#localization_overridesjson--text-and-translations). Look up the hero's current key (the exported template in `_Template/` lists it) and give that key your new text.
+- **To point a hero at a brand-new key of your own**, set the field here *and* define that key in `localization_overrides.json`. These two always go together: a key with no text behind it displays as the raw key itself and logs an error every time the panel draws.
+
+`heroBonusDescription` has one extra rule, and it's the single most common thing modders get wrong - see [Bonus text comes in pairs](#bonus-text-comes-in-pairs) for the symptom.
+
+The game shows each bonus as `Name: description`, but a hero only stores the *description* key - the **name key is derived from it** by swapping `heroBonusDescription` for `heroBonusTitle` inside the key. So `heroBonusDescription1` implies `heroBonusTitle1`, and the two are always a matched pair:
+
+| Key | Holds | Example |
+|---|---|---|
+| `heroBonusTitle3` | the short **name** only | `Ranger Captain` |
+| `heroBonusDescription3` | the **effect text** only | `Deepwood Rangers gain +10 [Accuracy] and +4 [Missile Strength]` |
+
+Two consequences worth spelling out:
+
+- **If you override one, override the other.** Putting the whole sentence into the title key leaves the untouched description key appended after it, so the panel reads `Your new sentence: the original effect text`.
+- **If you invent a key** that doesn't contain the text `heroBonusDescription`, there's no name to derive and the bonus renders as the description alone, with no name prefix. To get a custom name too, follow the convention: name your keys something like `myModHeroBonusDescriptionA` and `myModHeroBonusTitleA`, and define both.
+
+The array must have exactly two entries, both non-empty. Anything else is rejected with a warning and the hero keeps their original bonus keys.
 
 ## `hero_bonus_rules.json` — hero and faction battle bonuses
 
@@ -177,7 +202,7 @@ This is the most powerful and most complex file. It replaces the numeric bonuses
 | Field | Type | Notes |
 |---|---|---|
 | `heroID` | int | which hero grants this bonus |
-| `localizationKey` | string | the localization key used to display the bonus's name in the UI |
+| `localizationKey` | string | the localization key for the bonus's **name**. Keep the text behind it short - it's shown as a label beside the stat number on unit tooltips, so a full sentence reads badly there. Note this is the `heroBonusTitleN` half of a pair; changing what it says does **not** update the hero's effect line, which is the `heroBonusDescriptionN` half. See [Bonus text comes in pairs](#bonus-text-comes-in-pairs). |
 | `condition` | object | see Conditions below |
 | `stat` | enum (`UnitStat`) | `MeleeAttack`, `MeleeDefense`, `WeaponStrength`, `Accuracy`, `Range`, `MissileStrength`, `Speed`, `Armor`, `ChargeBonus`, `Leadership`, `Ammunition`, `ChargeImpactDamage` |
 | `magnitudeKind` | enum | `Flat` (add `value` directly) or `PercentOfCurrentValue` (add `value` × the stat's current value - e.g. `0.5` means +50%) |
@@ -202,7 +227,7 @@ Every `condition` object has a `filterKind`, and depending on which one, one or 
 | `Unconditional` | none | applies to every unit |
 | `RarityTier` | `requiredRarityTier`: `Common`/`Uncommon`/`Rare`/`Legendary` | applies only to units of that rarity |
 | `UnitName` | `unitNames`: array of `UnitName` | applies only to the listed units |
-| `UnitTag` | `tag`: string | applies to units matching a named tag - currently `"Goblin"` or `"MeleeInfantry"` |
+| `UnitTag` | `tag`: string | applies to units matching a named tag - currently `"Goblin"` or `"MeleeInfantry"` (which covers `Hybrid` units as well as `Melee` ones) |
 | `UnitType` | `unitTypes`: array of `UnitType` | applies to units of the listed type(s) |
 | `UnitSize` | `unitSizes`: array of `UnitSize` | applies to units of the listed size(s) |
 | `EnemyRace` | `requiredEnemyRace`: a `Race` | applies only when fighting that race |
@@ -400,7 +425,7 @@ A single object, not a list. Each field optional independently.
 
 ## `localization_overrides.json` — text and translations
 
-Replaces the display text behind any localization key, per language. This is what lets you rename or re-translate things that are shown as text — including the **bonus names** referenced by `localizationKey` in `hero_bonus_rules.json`, plus any other UI string in the game's main table.
+Replaces the display text behind any localization key, per language. This is what lets you rename or re-translate anything the game shows as text — including the **bonus names** referenced by `localizationKey` in `hero_bonus_rules.json`, the hero name/description/lore keys from `hero_overrides.json`, and any other UI, event or lore string.
 
 A flat list of entries, each with a `locale`, a `key`, and the `text` to show. (It's a flat list rather than nested by language because of how the game parses these files.)
 
@@ -408,6 +433,7 @@ A flat list of entries, each with a `locale`, a `key`, and the `text` to show. (
 {
     "overrides": [
         { "locale": "en", "key": "heroBonusTitle2", "text": "Inspiring Presence" },
+        { "locale": "en", "key": "heroBonusDescription2", "text": "All units gain +2 [Charge Bonus]" },
         { "locale": "en", "key": "exampleCustomBonusName", "text": "Example Custom Bonus" }
     ]
 }
@@ -415,15 +441,50 @@ A flat list of entries, each with a `locale`, a `key`, and the `text` to show. (
 
 | Field | Type | Notes |
 |---|---|---|
-| `locale` | string | language code the text applies to - `en` (English), `zh` (Simplified Chinese), `zh-Hant` (Traditional Chinese), `ja` (Japanese), `ko` (Korean). An override only shows while that language is selected; supply one entry per language you want to cover. |
+| `locale` | string | language code the text applies to. One entry per language you want to cover — see the list below. |
 | `key` | string | the localization key to replace. Can be an existing key (to rename/retranslate something the game already shows) or a brand-new key of your own. |
 | `text` | string | the text to display. |
 
-**Overriding an existing key** changes that text everywhere it appears in-game. For example, `heroBonusTitle2` is the name of Edric Valeward's charge bonus, so the entry above renames it wherever it's shown.
+Supported locale codes: `en` (English), `de` (German), `es` (Spanish), `fr` (French), `ja` (Japanese), `ko` (Korean), `ru` (Russian), `zh` (Simplified Chinese), `zh-Hant` (Traditional Chinese). The code must match exactly.
 
-**Inventing a new key** is what makes custom bonuses possible. `hero_bonus_rules.json` requires a `localizationKey` for every rule, and normally you'd have to reuse an existing hero's bonus name. Instead, point a rule at your own key (e.g. `"localizationKey": "exampleCustomBonusName"`) and define that key here — now your bonus displays its own name. For a name-only entry like a bonus title, just the name is enough; the numeric magnitude is drawn separately by the game.
+**Overriding an existing key** changes that text everywhere it appears in-game. For example, `heroBonusTitle2` is the name of Edric Valeward's charge bonus and `heroBonusDescription2` is what that bonus does, so the two entries above rewrite his second bonus wherever it's shown. Those two go together - see [Bonus text comes in pairs](#bonus-text-comes-in-pairs) below.
 
-Overrides match purely by `key`, independent of which in-game text table asked for it, and only the game's main text table is covered (event and lore text can't be overridden this way yet). A key you define but never reference shows up nowhere - it's harmless. Missing the text for a language just falls back to the game's built-in text for that language, so a mod that only ships `en` entries still works in every language (untranslated keys simply read as normal).
+**Inventing a new key** is what makes custom bonuses possible. `hero_bonus_rules.json` requires a `localizationKey` for every rule, and normally you'd have to reuse an existing hero's bonus name. Instead, point a rule at your own key (e.g. `"localizationKey": "exampleCustomBonusName"`) and define that key here — now your bonus displays its own name. Keep it to a short name: on unit tooltips the game prints this text as a label next to the stat number it's already drawing, so the name alone is what you want there.
+
+### Bonus text comes in pairs
+
+**A hero's bonus is two keys, and rebalancing usually means editing both.** This is the most common mod bug, and it looks like text that's only half-replaced.
+
+| Key | Holds | Vanilla example |
+|---|---|---|
+| `heroBonusTitle3` | the short **name** | `Ranger Captain` |
+| `heroBonusDescription3` | the **effect text** | `Deepwood Rangers gain +10 [Accuracy] and +4 [Missile Strength]` |
+
+The Hero Effects panel renders them joined as `Name: description`. `hero_bonus_rules.json` only ever refers to the **title** key, so it's easy to assume that's the whole thing - but if you override just the title with a full sentence, the untouched description is still appended after it:
+
+```text
+No Mere Ranger: All [Ranged] units gain +4 [Missile Strength] and [Armor Piercing]: Deepwood Rangers gain +10 [Accuracy] and +4 [Missile Strength]
+                                                                                  ^ the vanilla description you didn't override
+```
+
+Override both instead:
+
+```json
+{ "locale": "en", "key": "heroBonusTitle3",       "text": "No Mere Ranger" },
+{ "locale": "en", "key": "heroBonusDescription3", "text": "All [Ranged] units gain +4 [Missile Strength]; [Common] and [Uncommon] units gain [Armor Piercing]" }
+```
+
+**Descriptions do not update themselves.** The numbers in a description are hand-written text, not generated from your rules. Change a value in `hero_bonus_rules.json` and the effect line keeps advertising the old one until you override the matching `heroBonusDescriptionN` to match. (The per-unit stat tooltips are the exception - those read the live rule value and pair it with your `localizationKey` name, which is why keeping that name short matters.)
+
+**Which number goes with which hero?** The keys run in order, two per hero: hero 1 uses `heroBonusTitle1`/`Description1` and `heroBonusTitle2`/`Description2`, hero 2 uses `3` and `4`, and so on. The exported `_Template/` files list each hero's current keys.
+
+**Writing a description.** Wrap stat and attribute names in square brackets and the game colours them: `[Melee Attack]`, `[Missile Strength]`, `[Armor Piercing]`, `[Stalwart]`, `[Rare]`, `[Common]`. The bracketed text has to match the game's own display name for that stat or attribute, so copy the spelling from a vanilla description. `+N` values are coloured automatically. A bracket the game doesn't recognise is left as literal text, which is the quickest way to spot a typo.
+
+A hero's `heroName` / `heroDescription` / `heroPrefabName` fields are localization keys too - see [Changing a hero's text](#changing-a-heros-text) for how to reword those.
+
+**Language fallback.** If the player's language has no entry for a key, the game falls back to your `en` entry for that same key, and only then to its own built-in text. So a mod that ships English only still shows its text to everyone — a renamed hero keeps the new name in every language rather than reverting to the original. Add entries for other languages to translate on top of that.
+
+Overrides match purely by `key`, independent of which in-game text table asked for it. That covers the main UI table, event text and lore text alike. The flip side: if the same key exists in more than one table, one override entry changes all of them. A key you define but never reference shows up nowhere - it's harmless.
 
 ## `race_bonus_overrides.json` — race passive tuning
 
