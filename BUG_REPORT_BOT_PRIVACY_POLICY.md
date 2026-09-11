@@ -2,7 +2,7 @@
 
 **Effective date:** 11 September 2026
 **Operator:** Memori Studios (the developer of Tabletop Tavern)
-**Contact:** [contact email]
+**Contact:** tj@memoristudios.com
 
 This policy covers the Discord bot that Memori Studios uses to read player bug reports in the
 official Tabletop Tavern Discord server. It is written to be read in a minute, because the bot does
