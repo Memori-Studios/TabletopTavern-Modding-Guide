@@ -70,6 +70,12 @@ You can stop being covered by these terms at any time by no longer posting in th
 your posts removes them from anything the Bot can read; see the Privacy Policy for how to ask us to
 remove copies we have made.
 
-## 8. Contact
+## 8. Governing law
+
+These terms are governed by the laws of the Commonwealth of Massachusetts and the United States
+of America, and any dispute will be handled in the state or federal courts located in
+Massachusetts, unless the law where you live gives you rights that cannot be overridden.
+
+## 9. Contact
 
 Questions about these terms or the Bot: tj@memoristudios.com.
