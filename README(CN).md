@@ -64,6 +64,8 @@ Mods/
 
 `unitName` 必须与现有单位的名称完全匹配（区分大小写）——完整列表请参阅下方的 [单位名称参考]。 覆盖一个不存在的 `unitName` 会被静默跳过（并在日志中生成一条警告）——此格式只能修改已有单位，无法添加新单位。
 
+所有单位的原版数值见 [`unit_stats.csv`](unit_stats.csv)——每个单位一行，下表每个字段一列，字段名与 `unit_overrides.json` 完全一致。用表格软件打开即可查看修改前的原始数值。
+
 可用字段:
 
 | 字段 | 类型 | 备注 |
@@ -72,9 +74,26 @@ Mods/
 | `unitSize` | enum | 步兵`Infantry`, 骑兵`Cavalry`, 巨兽`Monstrous`, 单个单位`SingleUnit`, 炮兵`Artillery` |
 | `rarityTier` | enum | 普通`Common`, 罕见`Uncommon`, 稀有`Rare`, 传说`Legendary` |
 | `race` | enum | `IronLegion`, `Gruntkin`, `RavenHost`, `TaelindorForest`, `SanguineCourt`, `SakuraDynasty`, `DeepstoneHold`, `DrakosaurBrood`, `Special` - 将该单位移至该派系的收藏/军表中。不会改变单位的模型、图标或肖像，这些都会保持其原本的样子。 |
-| `meleeAttack`, `meleeDefense`, `weaponStrength`, `armor`, `chargeBonus`, `chargeImpactDamage`, `chargeCount`, `missileStrength`, `ammunition`, `explosionDamage` | int | |
-| `hitPointsPerUnit`, `baseUnitCount` | int | 必须为正数——零值或负值会被拒绝，并保留原有数值 |
-| `speed`, `leadership`, `baseRange`, `attackAccuracy`, `attackCooldown`, `rateOfFire`, `explosionRange`, `explosionForce` | float | |
+| `meleeAttack` | int | 近战技巧。每次挥砍的命中率为 `35 + (攻击方 meleeAttack - 防御方 meleeDefense) x 2` 百分比，限制在 10-90 之间。 |
+| `meleeDefense` | int | 同一公式中的防御方数值。被侧翼攻击时，该数值按一半计算。 |
+| `weaponStrength` | int | 每次近战命中的伤害，在目标护甲减免之前。没有伤害随机，翻倍即近战伤害翻倍。 |
+| `armor` | int | 每次受击的减伤比例为 `armor / (armor + 100)`：100 护甲减半伤害，50 护甲减少三分之一。破甲攻击只受一半减伤。 |
+| `hitPointsPerUnit` | int | 单个模型的生命值。小队总生命 = 此值 x `baseUnitCount`。必须为正数——零值或负值会被拒绝并保留原值。 |
+| `baseUnitCount` | int | 满员时小队的模型数量。必须为正数——零值或负值会被拒绝并保留原值。 |
+| `speed` | float | 移动速度。游戏内实际速度为此值除以 10，30 是缓慢的步兵，80 是骑兵。 |
+| `leadership` | float | 士气上限，0-100。士气在战斗中持续消耗，降到 5 时小队会永久溃逃，所以领导力越高，溃逃前能承受的打击越多。每级声望 +5。 |
+| `attackCooldown` | float | 所有单位近战挥砍的间隔秒数，包括远程单位（被近身后用此间隔挥砍）。越低越快。 |
+| `chargeBonus` | int | 冲锋蓄力 2 秒后，撞击时同时加到 `meleeAttack` 和 `weaponStrength` 上。接触后 6 秒消退；遇到反大型防御方、驻军城门、森林、沼泽和雨天时直接取消。 |
+| `chargeImpactDamage` | int | 冲锋撞倒的每个敌方模型所受的伤害。击退只在冲锋撞上未架盾的目标时发生：大型撞小型必定击退，小型撞小型每个模型 15% 概率，小型撞大型不会击退。 |
+| `chargeCount` | int | 一场战斗中小队可发起的冲锋次数。归零后小队进入力竭状态，不再获得 `chargeBonus`。 |
+| `baseRange` | float | 远程与炮兵攻击的射程（世界单位）。也是法师的施法距离。纯近战单位忽略此值。 |
+| `attackAccuracy` | float | 0-100 的百分比：每次射击瞄准目标而不是射空的概率。自由射击模式固定 -20，除非单位拥有 `steadyAim`。 |
+| `missileStrength` | int | 每次远程命中的伤害，在目标护甲减免之前。包括箭矢、弩矢、子弹以及炮弹的直接命中。 |
+| `rateOfFire` | float | 仅 `Artillery` 和 `Structure` 单位的射击间隔秒数，以及法师的施法间隔。普通 `Ranged` 和 `Hybrid` 射手忽略此值，固定 5 秒装填（拥有 `shotDiscipline` 时为 4 秒）。它是 `attackCooldown` 的远程对应项，后者是近战挥砍间隔。 |
+| `ammunition` | int | 小队停火前能射出的弹药数。法师则是充能次数。驻军城门弓箭手忽略此值。 |
+| `explosionDamage` | int | 仅 `Artillery`。炮弹落地时对 `explosionRange` 内每个模型造成的伤害。 |
+| `explosionRange` | float | 仅 `Artillery`。爆炸半径（世界单位）。 |
+| `explosionForce` | float | 仅 `Artillery`。爆炸把命中的模型抛飞的力度，越高抛得越远。 |
 | `none`, `standardShields`, `armorPiercing`, `antiInfantry`, `antiLarge`, `terrifying`, `stalwart`, `outrider`, `swampCreature`, `forestDweller`, `chickenFlight`, `ethereal`, `bloodFrenzy`, `rage`, `emblazing`, `unstoppable`, `heavyShields`, `throwingAxes`, `armorSundering`, `monsterSlayer`, `forgefuryTempering`, `flamingAmmo`, `dragonsHoard`, `backStabbers`, `thickScales` | bool | 填写 `"true"` 或 `"false"` |
 | `shotDiscipline`, `overdraw`, `steadyAim`, `demolisher`, `powderReserves`, `deepQuivers` | bool | 远程特性——`shotDiscipline`（装填速度提升 20%）和 `overdraw`（射程 +15%）需要能够射击的单位；`steadyAim`（免除自由射击模式的命中率惩罚）对 `Ranged` 与 `Hybrid` 生效，但对 `Artillery` 无效，因为炮兵没有可切换的射击模式；`demolisher`（爆炸伤害与范围 +30%）和 `powderReserves`（弹药 +50%）仅对 `Artillery` 生效；`deepQuivers`（弹药 +500）仅对 `Ranged` 生效，对 `Hybrid` 无效，因为它们的弹药只是少量投掷武器 |
 
@@ -377,7 +396,7 @@ Mods/
 | 字段 | 类型 | 备注 |
 |---|---|---|
 | `actNumber` | int | 1-3 |
-| `consumable` | enum (`ConsumableEnum`) | `MinorHealth`（小生命）, `MajorHealth`（大生命）, `Prestige`（威望）, `Duplicate`（复制）, `NewUnit`（新单位）, `Alchemist`（炼金）, `Rewind`（回溯）, `TrialofGrasses`（荒草试炼）, `FateshineElixir`（命辉灵药）, `RunewellNectar`（符文井甘露）, `LambSauce`（羊肉酱） |
+| `consumable` | enum (`ConsumableEnum`) | `MinorHealth`（小生命）, `MajorHealth`（大生命）, `Prestige`（威望）, `Duplicate`（复制）, `NewUnit`（新单位）, `Alchemist`（炼金）, `Rewind`（回溯）, `TrialofGrasses`（荒草试炼）, `FateshineElixir`（命辉灵药）, `RunewellNectar`（符文井甘露）, `LambSauce`（羊肉酱）, `ManaDraught`（法力药水，仅限法术更新版本；此前的版本会忽略） |
 | `weight` | float | |
 
 ### `townBountyRanges` — 城镇掠夺金币
