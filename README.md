@@ -64,6 +64,8 @@ A list of entries, each keyed by `unitName`. Include only the fields you want to
 
 `unitName` must match an existing unit exactly (case-sensitive) — see [Unit name reference](#unit-name-reference) below for the full list. Overriding a `unitName` that doesn't exist is silently skipped (with a warning in the log) — this format can only change existing units, not add new ones.
 
+The stock values for every unit are in [`unit_stats.csv`](unit_stats.csv) - one row per unit, one column per field below, in the same spelling `unit_overrides.json` uses. Open it in a spreadsheet to see what you are changing from.
+
 Available fields:
 
 | Field | Type | Notes |
@@ -72,9 +74,26 @@ Available fields:
 | `unitSize` | enum | `Infantry`, `Cavalry`, `Monstrous`, `SingleUnit`, `Artillery` |
 | `rarityTier` | enum | `Common`, `Uncommon`, `Rare`, `Legendary` |
 | `race` | enum | `IronLegion`, `Gruntkin`, `RavenHost`, `TaelindorForest`, `SanguineCourt`, `SakuraDynasty`, `DeepstoneHold`, `DrakosaurBrood`, `Special` - moves the unit to that faction's collection/army-builder roster. Doesn't change the unit's model, icon, or portrait, which stay whatever they were originally. |
-| `meleeAttack`, `meleeDefense`, `weaponStrength`, `armor`, `chargeBonus`, `chargeImpactDamage`, `chargeCount`, `missileStrength`, `ammunition`, `explosionDamage` | int | |
-| `hitPointsPerUnit`, `baseUnitCount` | int | must be positive - a zero or negative value is rejected and the previous value is kept |
-| `speed`, `leadership`, `baseRange`, `attackAccuracy`, `attackCooldown`, `rateOfFire`, `explosionRange`, `explosionForce` | float | |
+| `meleeAttack` | int | Melee skill. Chance to land a swing is `35 + (attacker meleeAttack - defender meleeDefense) x 2` percent, clamped to 10-90. |
+| `meleeDefense` | int | The defending half of that same formula. A unit hit from the flank defends at half this value. |
+| `weaponStrength` | int | Damage of each melee hit that lands, before the target's armor. There is no damage roll, so doubling it doubles melee damage. |
+| `armor` | int | Cuts every hit taken by `armor / (armor + 100)`: 100 armor halves damage, 50 armor cuts it by a third. Armor-piercing attackers only get half that reduction. |
+| `hitPointsPerUnit` | int | Health of one model. Squad health is this times `baseUnitCount`. Must be positive - zero or negative is rejected and the previous value kept. |
+| `baseUnitCount` | int | Models in the squad at full strength. Must be positive - zero or negative is rejected and the previous value kept. |
+| `speed` | float | Movement speed. The in-world value is this divided by 10, so 30 is a slow footsoldier and 80 is cavalry. |
+| `leadership` | float | Maximum morale, 0-100. Morale drains under fire and the squad breaks for good when it reaches 5, so more leadership means more punishment before it runs. Each prestige level adds 5. |
+| `attackCooldown` | float | Seconds between melee swings for every unit, shooters included (they swing with it once caught in melee). Lower is faster. |
+| `chargeBonus` | int | Added to both `meleeAttack` and `weaponStrength` on impact after a charge has built up for 2 seconds. Fades 6 seconds after contact, and is cancelled outright by anti-large defenders, garrison gates, forest, swamp and rain. |
+| `chargeImpactDamage` | int | Damage dealt to each enemy model knocked over by the charge. Knockback only happens on a charge into a target that is not bracing: a large unit hitting a small one always knocks back, small on small has a 15% chance per model, and small on large never does. |
+| `chargeCount` | int | Charges the squad can make in one battle. At zero it is Exhausted and no longer gets `chargeBonus`. |
+| `baseRange` | float | Reach of ranged and artillery attacks in world units. Also the cast range for mages. Ignored on pure melee units. |
+| `attackAccuracy` | float | Percent chance, 0-100, that a shot is aimed at its target rather than fired into the ground. Fire-at-Will shooting takes a flat 20-point penalty unless the unit has `steadyAim`. |
+| `missileStrength` | int | Damage of each ranged hit that lands, before the target's armor. Arrows, bolts, bullets and the direct hit of a shell. |
+| `rateOfFire` | float | Seconds between shots for `Artillery` and `Structure` units only, and seconds between casts for mages. Regular `Ranged` and `Hybrid` shooters ignore it and reload on a fixed 5 seconds (4 with `shotDiscipline`). This is the ranged counterpart of `attackCooldown`, which is the melee swing interval. |
+| `ammunition` | int | Shots the squad can fire before it stops shooting. Charges for mages. Garrison gate archers ignore it. |
+| `explosionDamage` | int | `Artillery` only. Damage dealt to every model inside `explosionRange` when a shell lands. |
+| `explosionRange` | float | `Artillery` only. Radius of the blast in world units. |
+| `explosionForce` | float | `Artillery` only. How hard the blast throws the models it catches. Higher values send them further. |
 | `none`, `standardShields`, `armorPiercing`, `antiInfantry`, `antiLarge`, `terrifying`, `stalwart`, `outrider`, `swampCreature`, `forestDweller`, `chickenFlight`, `ethereal`, `bloodFrenzy`, `rage`, `emblazing`, `unstoppable`, `heavyShields`, `throwingAxes`, `armorSundering`, `monsterSlayer`, `forgefuryTempering`, `flamingAmmo`, `dragonsHoard`, `backStabbers`, `thickScales` | bool | write `"true"` or `"false"` |
 | `shotDiscipline`, `overdraw`, `steadyAim`, `demolisher`, `powderReserves`, `deepQuivers` | bool | shooter traits - `shotDiscipline` (20% faster reload) and `overdraw` (+15% range) need a unit that shoots; `steadyAim` (no Fire-at-Will accuracy penalty) does something on `Ranged` and `Hybrid`, but not `Artillery`, which has no fire mode to switch; `demolisher` (+30% explosion damage and radius) and `powderReserves` (+50% ammunition) only do anything on `Artillery`; `deepQuivers` (+500 ammunition) only does anything on `Ranged` - it is ignored on `Hybrid`, whose ammo pool is a token handful of throwing weapons |
 
@@ -391,7 +410,7 @@ Each entry is a relative weight (not a percentage) for how likely that consumabl
 | Field | Type | Notes |
 |---|---|---|
 | `actNumber` | int | 1-3 |
-| `consumable` | enum (`ConsumableEnum`) | `MinorHealth`, `MajorHealth`, `Prestige`, `Duplicate`, `NewUnit`, `Alchemist`, `Rewind`, `TrialofGrasses`, `FateshineElixir`, `RunewellNectar`, `LambSauce` |
+| `consumable` | enum (`ConsumableEnum`) | `MinorHealth`, `MajorHealth`, `Prestige`, `Duplicate`, `NewUnit`, `Alchemist`, `Rewind`, `TrialofGrasses`, `FateshineElixir`, `RunewellNectar`, `LambSauce`, `ManaDraught` (Spell Update builds only; ignored before then) |
 | `weight` | float | |
 
 ### `townBountyRanges` — gold looted from towns
