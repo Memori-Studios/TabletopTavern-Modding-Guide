@@ -1,6 +1,6 @@
 # 桌上谈兵模组制作指南
 
-桌上谈兵支持通过模组来覆盖单位属性、派系颜色、英雄数据、英雄/派系的战斗加成、装备效果数值、商店与经济定价、敌方军队与驻军生成、种族被动调整以及本地化文本——无需编写代码，只需纯文本文件即可。本指南将介绍这些文件的格式。请参阅 [`ExampleMod/`](ExampleMod/) 文件夹，里面有一个完整可用的示例，你可以直接复制并修改。
+桌上谈兵支持通过模组来覆盖单位属性、派系颜色、英雄数据、英雄/派系的战斗加成、装备效果数值、商店与经济定价、敌方军队与驻军生成、种族被动调整、天气效果与概率以及本地化文本——无需编写代码，只需纯文本文件即可。本指南将介绍这些文件的格式。请参阅 [`ExampleMod/`](ExampleMod/) 文件夹，里面有一个完整可用的示例，你可以直接复制并修改。
 
 ## 模组的存放位置
 
@@ -22,10 +22,11 @@ Mods/
         army_generation_rules.json <- optional
         economy_overrides.json <- optional
         race_bonus_overrides.json <- optional
+        weather_overrides.json <- optional
         localization_overrides.json <- optional
 ```
 
-一个文件夹必须包含 `mod.json` 才会被识别为模组——这九个覆盖文件都是可选的，只需包含你需要的文件即可。以下划线 `_` 开头的文件夹名（如 `_Template`）为保留名称，不会被加载为模组。
+一个文件夹必须包含 `mod.json` 才会被识别为模组——这十个覆盖文件都是可选的，只需包含你需要的文件即可。以下划线 `_` 开头的文件夹名（如 `_Template`）为保留名称，不会被加载为模组。
 
 新模组在游戏首次发现时会自动启用。你可以使用游戏内的 **模组** 菜单（从主菜单进入）来启用/禁用模组并调整其加载顺序——当多个模组修改了相同的内容时，列表中位置更靠下的模组内容会覆盖位置更靠上的模组。 **所有改动不会立即生效，需要在下一次重启游戏时才会应用。**
 
@@ -559,6 +560,66 @@ Mods/
 | `immuneToFlankMorale` | bool | true | 免疫被侧翼包抄带来的士气惩罚 |
 | `immuneToTerror` | bool | true | 免疫恐惧（来自造成恐惧的敌人） |
 | `immuneToRetreatingAlliesMorale` | bool | true | 免疫附近友军撤退带来的士气惩罚 |
+
+## `weather_overrides.json` - 天气效果与概率
+
+每场战斗会从四种天气（晴天、雨天、雾天、雪天）中随机一种。此文件可以调整每种天气效果的**数值**，以及每个区域中各天气的**出现概率**。它不能添加新天气，也不能改变天气效果的类型：雨天总是减慢大型单位，雾天总是削弱远程单位，雪天总是降低士气。
+
+每个块和每个字段都是可选的。不想修改的内容直接省略即可。
+
+```json
+{
+    "rain": { "largeUnitSpeedModifier": "0.5", "removesChargeBonus": "false", "autoResolveAccuracyModifier": "0.5" },
+    "snow": { "moralePenalty": "-15" },
+    "fog":  { "accuracyModifier": "0.5", "rangeModifier": "0.75" },
+    "regionWeathers": [
+        {
+            "race": "Gruntkin",
+            "weathers": [
+                { "weather": "ClearSkies", "likelihood": "40" },
+                { "weather": "Rain",       "likelihood": "60" }
+            ]
+        }
+    ]
+}
+```
+
+倍率表示**保留的比例**，而不是减少的比例：`0.5` 表示减半，`0.75` 表示保留四分之三，`1` 表示关闭该效果。游戏内的天气提示会显示实时百分比，因此玩家看到的就是你修改后的数值。
+
+### `rain` - 雨天
+
+| 字段 | 类型 | 默认值 | 说明 |
+|---|---|---|---|
+| `largeUnitSpeedModifier` | float | 0.5 | 雨天时大型单位的速度倍率；必须大于零 |
+| `removesChargeBonus` | bool | true | 雨天时大型单位是否失去冲锋加成；设为 `false` 则可正常冲锋 |
+| `autoResolveAccuracyModifier` | float | 0.5 | 雨天时自动结算预测中所有小队的命中率倍率 |
+
+### `snow` - 雪天
+
+| 字段 | 类型 | 默认值 | 说明 |
+|---|---|---|---|
+| `moralePenalty` | float | -10 | 加到每个小队的最大士气和当前士气上；负值降低士气，正值则会提高 |
+
+### `fog` - 雾天
+
+| 字段 | 类型 | 默认值 | 说明 |
+|---|---|---|---|
+| `accuracyModifier` | float | 0.5 | 远程单位的命中率倍率 |
+| `rangeModifier` | float | 0.5 | 远程单位的射程倍率（同时缩小驻军城门的射程弧线） |
+
+### `regionWeathers` - 各区域概率
+
+每个战役区域都属于一个种族，因此区域以该种族的名称作为键（种族名称与本指南其他部分相同：`IronLegion`、`Gruntkin`、`RavenHost`、`TaelindorForest`、`SanguineCourt`、`SakuraDynasty`、`DeepstoneHold`、`DrakosaurBrood`）。
+
+一个条目会**替换该区域的整个天气表**，所以请列出你希望在该区域可能出现的所有天气。未列出的天气将不会再在该区域出现。概率值是相对权重而非百分比：`40` 和 `60` 表示 40% 和 60%，但 `2` 和 `3` 的含义完全相同。
+
+| 字段 | 类型 | 说明 |
+|---|---|---|
+| `race` | string | 要替换哪个区域，以其所属种族表示 |
+| `weathers[].weather` | string | `ClearSkies`、`Rain`、`Fog` 或 `Snow` |
+| `weathers[].likelihood` | float | 相对权重，零或更大；整个列表的总和必须大于零 |
+
+种族未知、天气未知或列表为空的条目会被跳过并记录警告，该区域保留原有概率。天气按战役种子逐节点随机生成，因此修改后的表在每次访问同一节点时仍会得到相同的天气。
 
 ## 测试你的模组
 
