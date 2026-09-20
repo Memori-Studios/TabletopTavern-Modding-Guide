@@ -1,6 +1,6 @@
 # Tabletop Tavern Modding Guide
 
-Tabletop Tavern supports mods that override unit stats, faction colors, hero data, hero/faction battle bonuses, gear effect magnitudes, shop/economy pricing, enemy army/garrison generation, race passive tuning, and localized text — no code required, just plain text files. This guide covers the file formats. See the [`ExampleMod/`](ExampleMod/) folder for a complete, working example you can copy and edit.
+Tabletop Tavern supports mods that override unit stats, faction colors, hero data, hero/faction battle bonuses, gear effect magnitudes, shop/economy pricing, enemy army/garrison generation, race passive tuning, weather effects and odds, and localized text — no code required, just plain text files. This guide covers the file formats. See the [`ExampleMod/`](ExampleMod/) folder for a complete, working example you can copy and edit.
 
 ## Where mods go
 
@@ -22,10 +22,11 @@ Mods/
         army_generation_rules.json <- optional
         economy_overrides.json <- optional
         race_bonus_overrides.json <- optional
+        weather_overrides.json <- optional
         localization_overrides.json <- optional
 ```
 
-A folder needs `mod.json` to be recognized as a mod at all — the nine override files are each optional, include only the ones you need. Folder names starting with `_` (like `_Template`) are reserved and never loaded as mods.
+A folder needs `mod.json` to be recognized as a mod at all — the ten override files are each optional, include only the ones you need. Folder names starting with `_` (like `_Template`) are reserved and never loaded as mods.
 
 New mods are enabled automatically the first time the game finds them. Use the in-game **Mods** menu (from the main menu) to enable/disable mods and reorder them — when more than one mod changes the same thing, the one lower in the list wins. **Changes apply the next time you restart the game**, not live.
 
@@ -604,6 +605,66 @@ Sanguine Court squads ignore several morale penalties. These are on/off toggles 
 | `immuneToFlankMorale` | bool | true | immune to the morale penalty from being flanked |
 | `immuneToTerror` | bool | true | immune to terror (fear from terrifying enemies) |
 | `immuneToRetreatingAlliesMorale` | bool | true | immune to the morale penalty from nearby allies retreating |
+
+## `weather_overrides.json` - weather effects and odds
+
+Battles roll one of four weathers (Clear Skies, Rain, Fog, Snow). This file lets you rebalance the **numbers** behind each weather's effect and change **how likely** each weather is in each region. It does not add new weathers or change what kind of effect a weather has; Rain always slows large units, Fog always hampers ranged units, Snow always lowers morale.
+
+Every block and field is optional. Omit anything you don't want to change.
+
+```json
+{
+    "rain": { "largeUnitSpeedModifier": "0.5", "removesChargeBonus": "false", "autoResolveAccuracyModifier": "0.5" },
+    "snow": { "moralePenalty": "-15" },
+    "fog":  { "accuracyModifier": "0.5", "rangeModifier": "0.75" },
+    "regionWeathers": [
+        {
+            "race": "Gruntkin",
+            "weathers": [
+                { "weather": "ClearSkies", "likelihood": "40" },
+                { "weather": "Rain",       "likelihood": "60" }
+            ]
+        }
+    ]
+}
+```
+
+Modifiers are the **fraction kept**, not the reduction: `0.5` halves a stat, `0.75` keeps three quarters of it, `1` switches the effect off. The weather tooltips in game show the live percentages, so a modded value is what the player reads.
+
+### `rain`
+
+| Field | Type | Default | Notes |
+|---|---|---|---|
+| `largeUnitSpeedModifier` | float | 0.5 | speed multiplier for large units while it rains; must be greater than zero |
+| `removesChargeBonus` | bool | true | whether large units lose their charge bonus while it rains; `false` lets them charge as normal |
+| `autoResolveAccuracyModifier` | float | 0.5 | accuracy multiplier applied to every squad in the auto-resolve prediction while it rains |
+
+### `snow`
+
+| Field | Type | Default | Notes |
+|---|---|---|---|
+| `moralePenalty` | float | -10 | added to every squad's max and current morale; negative lowers it, positive would raise it |
+
+### `fog`
+
+| Field | Type | Default | Notes |
+|---|---|---|---|
+| `accuracyModifier` | float | 0.5 | accuracy multiplier for ranged units |
+| `rangeModifier` | float | 0.5 | range multiplier for ranged units (also shrinks the garrison gate's range arc) |
+
+### `regionWeathers` - per-region odds
+
+Each campaign region belongs to one race, so a region is keyed by that race's name (the same `race` names used elsewhere in this guide: `IronLegion`, `Gruntkin`, `RavenHost`, `TaelindorForest`, `SanguineCourt`, `SakuraDynasty`, `DeepstoneHold`, `DrakosaurBrood`).
+
+An entry **replaces that region's whole weather table**, so list every weather you want to be possible there. Weathers you leave out can no longer occur in that region. Likelihoods are relative weights, not percentages: `40` and `60` mean 40% and 60%, but `2` and `3` would mean the same thing.
+
+| Field | Type | Notes |
+|---|---|---|
+| `race` | string | which region to replace, by the race that hosts it |
+| `weathers[].weather` | string | `ClearSkies`, `Rain`, `Fog` or `Snow` |
+| `weathers[].likelihood` | float | relative weight, zero or more; the list must add up to more than zero |
+
+An entry with an unknown race, an unknown weather or an empty list is skipped with a warning and the region keeps its shipped odds. Weather is rolled per map node from the campaign seed, so a changed table still gives the same weather on every visit to a node.
 
 ## Testing your mod
 

@@ -1,0 +1,14 @@
+{
+    "rain": { "removesChargeBonus": "false" },
+    "snow": { "moralePenalty": "-15" },
+    "fog": { "rangeModifier": "0.75" },
+    "regionWeathers": [
+        {
+            "race": "Gruntkin",
+            "weathers": [
+                { "weather": "ClearSkies", "likelihood": "40" },
+                { "weather": "Rain", "likelihood": "60" }
+            ]
+        }
+    ]
+}
