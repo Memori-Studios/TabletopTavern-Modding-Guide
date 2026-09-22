@@ -71,6 +71,7 @@ Mods/
 
 | 字段 | 类型 | 备注 |
 |---|---|---|
+| `heroID` | int | 可选。设置后，该条目仅在使用该英雄的战役进行中生效，否则被跳过。由于游戏只有一张属性表，它会同时改变**双方军队**的这个单位：给一个敌方单位设置英雄限定的 `unitSize`，敌军也会以该规模上场。用它可以让 `unitType`、`unitSize`、`rarityTier`、`race` 或任何其他字段随英雄变化。属性表在指挥官界面选择英雄、载入战役以及返回主菜单时重建，因此自定义战斗使用原版单位。带 `heroID` 的条目与其他条目一样按文件顺序应用。 |
 | `unitType` | enum | 近战`Melee`, 远程`Ranged`, 混合`Hybrid`, 炮兵`Artillery`, 建筑`Structure`。`Hybrid` 单位既能射击也能顶在近战线上：它们部署在前排，不会风筝走位，获得近战声望加成与近战装备，在自动结算战斗中使用近战数据作战，但仍然携带弓或投掷武器进行远程攻击。它们不会获得任何弹药加成，因此请给它们较小的 `ammunition` 数值。原版的混合单位为 `Berserkers`、`Cragflayers` 和 `KunoichiInfiltrators`。 |
 | `unitSize` | enum | 步兵`Infantry`, 骑兵`Cavalry`, 巨兽`Monstrous`, 单个单位`SingleUnit`, 炮兵`Artillery` |
 | `rarityTier` | enum | 普通`Common`, 罕见`Uncommon`, 稀有`Rare`, 传说`Legendary` |
@@ -212,7 +213,7 @@ Mods/
 | `heroID` | int | 提供此加成的英雄 |
 | `localizationKey` | string | 用于在 UI 中显示加成名称的本地化键值 |
 | `condition` | object | 见下方"条件"部分 |
-| `stat` | enum (`UnitStat`) | `MeleeAttack`, `MeleeDefense`, `WeaponStrength`, `Accuracy`, `Range`, `MissileStrength`, `Speed`, `Armor`, `ChargeBonus`, `Leadership`, `Ammunition`, `ChargeImpactDamage` |
+| `stat` | enum (`UnitStat`) | `MeleeAttack`, `MeleeDefense`, `WeaponStrength`, `Accuracy`, `Range`, `MissileStrength`, `HitPoints`, `Speed`, `Armor`, `ChargeBonus`, `Leadership`, `Ammunition`, `ChargeImpactDamage`, `AttackCooldown`, `ChargeCount`, `RateOfFire`, `ExplosionDamage`, `ExplosionRange`, `ExplosionForce`。这里使用的是 `UnitStat` 名称，而不是 `unit_overrides.json` 的字段名：`HitPoints` 对应 `hitPointsPerUnit`，`Accuracy` 对应 `attackAccuracy`，`Range` 对应 `baseRange`。`AttackCooldown` 和 `RateOfFire` 的单位是秒，因此负数 `value` 会让单位更快；结果不会低于 0.1。`RateOfFire` 与单位字段一样，只影响读取它的单位：炮兵和法师。`ChargeCount`、`ExplosionRange` 和 `ExplosionForce` 只影响实时战斗，不影响自动结算（自动结算没有这些机制的模型）。`BaseUnitCount` 与其他属性不同：它在招募小队时应用并写入存档，因此必须是 `Flat`，不能使用 `EnemyRace` 条件，也不能作为派系规则（违反这些的规则会被加载器跳过）。招募卡、召唤预览和血条都使用同一个数量。`unitType`、`unitSize`、`rarityTier` 和 `race` 不是属性；要让它们随英雄变化，请在 `unit_overrides.json` 中使用带 `heroID` 的条目。 |
 | `magnitudeKind` | enum | `Flat` (直接加上 `value`) or `PercentOfCurrentValue` (加上 `value` × 该属性的当前值 - 例如 `0.5` 表示 +50%) |
 | `value` | float | |
 
