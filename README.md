@@ -186,7 +186,7 @@ The game shows each bonus as `Name: description`, but a hero only stores the *de
 | Key | Holds | Example |
 |---|---|---|
 | `heroBonusTitle3` | the short **name** only | `Ranger Captain` |
-| `heroBonusDescription3` | the **effect text** only | `Deepwood Rangers gain +10 [Accuracy] and +4 [Missile Strength]` |
+| `heroBonusDescription3` | the **effect text** only | `Deepwood Rangers gain +10 [Accuracy] and +4 [MissileStrength]` |
 
 Two consequences worth spelling out:
 
@@ -454,7 +454,7 @@ A flat list of entries, each with a `locale`, a `key`, and the `text` to show. (
 {
     "overrides": [
         { "locale": "en", "key": "heroBonusTitle2", "text": "Inspiring Presence" },
-        { "locale": "en", "key": "heroBonusDescription2", "text": "All units gain +2 [Charge Bonus]" },
+        { "locale": "en", "key": "heroBonusDescription2", "text": "All units gain +2 [ChargeBonus]" },
         { "locale": "en", "key": "exampleCustomBonusName", "text": "Example Custom Bonus" }
     ]
 }
@@ -472,6 +472,20 @@ Supported locale codes: `en` (English), `de` (German), `es` (Spanish), `fr` (Fre
 
 **Inventing a new key** is what makes custom bonuses possible. `hero_bonus_rules.json` requires a `localizationKey` for every rule, and normally you'd have to reuse an existing hero's bonus name. Instead, point a rule at your own key (e.g. `"localizationKey": "exampleCustomBonusName"`) and define that key here — now your bonus displays its own name. Keep it to a short name: on unit tooltips the game prints this text as a label next to the stat number it's already drawing, so the name alone is what you want there.
 
+### Keyword tags
+
+Square brackets mark a game keyword: a stat, trait, unit class, condition or rarity. The game colours it and, on most screens, shows its definition when the player hovers it. Write the keyword's id, not its display name:
+
+| You write | English shows | Notes |
+|---|---|---|
+| `[Accuracy]` | Accuracy | the keyword's own name in the player's language |
+| `[MeleeAttack\|melee attack]` | melee attack | your own wording after the pipe; the id still drives colour and hover |
+| `[Terror]` | Terrifying | an old alias for the Terrifying keyword; write `[Terrifying\|Terror]` to keep the word "Terror" |
+
+Use the pipe form whenever the sentence needs a different word form, which most languages do: `Войска получают +{0} к [Accuracy|Точности]`. Ids are the stat, trait and condition names used elsewhere in this guide (`MeleeAttack`, `ArmorPiercing`, `StandardShields`, `InForest`...), the rarities (`Common`, `Uncommon`, `Rare`, `Legendary`) and the unit classes `Ranged`, `Melee`, `Cavalry`, `Monstrous`, `SingleUnit` and `Undead`.
+
+Text written before keyword ids still works if a bracket holds the keyword's exact display name in that language (`[Melee Attack]` in English). A bracket that matches neither an id nor a name is shown as plain text, brackets included.
+
 ### Bonus text comes in pairs
 
 **A hero's bonus is two keys, and rebalancing usually means editing both.** This is the most common mod bug, and it looks like text that's only half-replaced.
@@ -479,27 +493,27 @@ Supported locale codes: `en` (English), `de` (German), `es` (Spanish), `fr` (Fre
 | Key | Holds | Vanilla example |
 |---|---|---|
 | `heroBonusTitle3` | the short **name** | `Ranger Captain` |
-| `heroBonusDescription3` | the **effect text** | `Deepwood Rangers gain +10 [Accuracy] and +4 [Missile Strength]` |
+| `heroBonusDescription3` | the **effect text** | `Deepwood Rangers gain +10 [Accuracy] and +4 [MissileStrength]` |
 
 The Hero Effects panel renders them joined as `Name: description`. `hero_bonus_rules.json` only ever refers to the **title** key, so it's easy to assume that's the whole thing - but if you override just the title with a full sentence, the untouched description is still appended after it:
 
 ```text
-No Mere Ranger: All [Ranged] units gain +4 [Missile Strength] and [Armor Piercing]: Deepwood Rangers gain +10 [Accuracy] and +4 [Missile Strength]
-                                                                                  ^ the vanilla description you didn't override
+No Mere Ranger: All Ranged units gain +4 Missile Strength and Armor Piercing: Deepwood Rangers gain +10 Accuracy and +4 Missile Strength
+                                                                            ^ the vanilla description you didn't override
 ```
 
 Override both instead:
 
 ```json
 { "locale": "en", "key": "heroBonusTitle3",       "text": "No Mere Ranger" },
-{ "locale": "en", "key": "heroBonusDescription3", "text": "All [Ranged] units gain +4 [Missile Strength]; [Common] and [Uncommon] units gain [Armor Piercing]" }
+{ "locale": "en", "key": "heroBonusDescription3", "text": "All [Ranged] units gain +4 [MissileStrength]; [Common] and [Uncommon] units gain [ArmorPiercing]" }
 ```
 
 **Descriptions do not update themselves.** The numbers in a description are hand-written text, not generated from your rules. Change a value in `hero_bonus_rules.json` and the effect line keeps advertising the old one until you override the matching `heroBonusDescriptionN` to match. (The per-unit stat tooltips are the exception - those read the live rule value and pair it with your `localizationKey` name, which is why keeping that name short matters.)
 
 **Which number goes with which hero?** The keys run in order, two per hero: hero 1 uses `heroBonusTitle1`/`Description1` and `heroBonusTitle2`/`Description2`, hero 2 uses `3` and `4`, and so on. The exported `_Template/` files list each hero's current keys.
 
-**Writing a description.** Wrap stat and attribute names in square brackets and the game colours them: `[Melee Attack]`, `[Missile Strength]`, `[Armor Piercing]`, `[Stalwart]`, `[Rare]`, `[Common]`. The bracketed text has to match the game's own display name for that stat or attribute, so copy the spelling from a vanilla description. `+N` values are coloured automatically. A bracket the game doesn't recognise is left as literal text, which is the quickest way to spot a typo.
+**Writing a description.** Wrap stats, traits and rarities in square brackets using their ids, as [Keyword tags](#keyword-tags) describes: `[MeleeAttack]`, `[MissileStrength]`, `[ArmorPiercing]`, `[Stalwart]`, `[Rare]`, `[Common]`. The game colours them and explains them on hover. Signed numbers such as `+4` or `-10%` are coloured automatically. A bracket the game doesn't recognise is left as literal text, which is the quickest way to spot a typo.
 
 A hero's `heroName` / `heroDescription` / `heroPrefabName` fields are localization keys too - see [Changing a hero's text](#changing-a-heros-text) for how to reword those.
 
