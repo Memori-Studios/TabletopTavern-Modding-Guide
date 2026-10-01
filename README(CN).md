@@ -85,9 +85,9 @@ Mods/
 | `speed` | float | 移动速度。游戏内实际速度为此值除以 10，30 是缓慢的步兵，80 是骑兵。 |
 | `leadership` | float | 士气上限，0-100。士气在战斗中持续消耗，降到 5 时小队会永久溃逃，所以领导力越高，溃逃前能承受的打击越多。每级声望 +5。 |
 | `attackCooldown` | float | 所有单位近战挥砍的间隔秒数，包括远程单位（被近身后用此间隔挥砍）。越低越快。 |
-| `chargeBonus` | int | 冲锋蓄力 2 秒后，撞击时同时加到 `meleeAttack` 和 `weaponStrength` 上。接触后 6 秒消退；遇到反大型防御方、驻军城门、森林、沼泽和雨天时直接取消。 |
-| `chargeImpactDamage` | int | 冲锋撞倒的每个敌方模型所受的伤害。击退只在冲锋撞上未架盾的目标时发生：大型撞小型必定击退，小型撞小型每个模型 15% 概率，小型撞大型不会击退。 |
-| `chargeCount` | int | 一场战斗中小队可发起的冲锋次数。归零后小队进入力竭状态，不再获得 `chargeBonus`。 |
+| `chargeBonus` | int | 冲锋命中后 6 秒内，同时加到 `meleeAttack` 和 `weaponStrength` 上。进攻的小队在离目标最后 30 个单位时开始冲刺，接敌前冲刺至少 1 秒，冲锋才算命中。从侧面或背后冲锋，加成提高 50%。正面冲锋反大型小队会被挡下，没有任何效果。在森林或沼泽中、冲向驻军城门、或（仅大型单位）雨天时无法冲锋。冲锋命中后，小队进入疲惫状态 15 秒，恢复前无法再次冲锋。 |
+| `chargeImpactDamage` | int | 冲锋撞倒的每个敌方模型所受的伤害，从侧面或背后冲锋时提高 50%。击退只在冲锋未被挡下、且目标未架盾时发生：大型撞小型必定击退，小型撞小型每个模型 15% 概率，小型撞大型不会击退。 |
+| `chargeCount` | int | 已不再生效。小队没有冲锋次数上限，每次冲锋后改为疲惫 15 秒。该字段仍可读取，以便旧模组继续加载。 |
 | `baseRange` | float | 远程与炮兵攻击的射程（世界单位）。也是法师的施法距离。纯近战单位忽略此值。 |
 | `attackAccuracy` | float | 0-100 的百分比：每次射击瞄准目标而不是射空的概率。自由射击模式固定 -20，除非单位拥有 `steadyAim`。 |
 | `missileStrength` | int | 每次远程命中的伤害，在目标护甲减免之前。包括箭矢、弩矢、子弹以及炮弹的直接命中。 |
@@ -213,7 +213,7 @@ Mods/
 | `heroID` | int | 提供此加成的英雄 |
 | `localizationKey` | string | 用于在 UI 中显示加成名称的本地化键值 |
 | `condition` | object | 见下方"条件"部分 |
-| `stat` | enum (`UnitStat`) | `MeleeAttack`, `MeleeDefense`, `WeaponStrength`, `Accuracy`, `Range`, `MissileStrength`, `HitPoints`, `Speed`, `Armor`, `ChargeBonus`, `Leadership`, `Ammunition`, `ChargeImpactDamage`, `AttackCooldown`, `ChargeCount`, `RateOfFire`, `ExplosionDamage`, `ExplosionRange`, `ExplosionForce`。这里使用的是 `UnitStat` 名称，而不是 `unit_overrides.json` 的字段名：`HitPoints` 对应 `hitPointsPerUnit`，`Accuracy` 对应 `attackAccuracy`，`Range` 对应 `baseRange`。`AttackCooldown` 和 `RateOfFire` 的单位是秒，因此负数 `value` 会让单位更快；结果不会低于 0.1。`RateOfFire` 与单位字段一样，只影响读取它的单位：炮兵和法师。`ChargeCount`、`ExplosionRange` 和 `ExplosionForce` 只影响实时战斗，不影响自动结算（自动结算没有这些机制的模型）。`BaseUnitCount` 与其他属性不同：它在招募小队时应用并写入存档，因此必须是 `Flat`，不能使用 `EnemyRace` 条件，也不能作为派系规则（违反这些的规则会被加载器跳过）。招募卡、召唤预览和血条都使用同一个数量。`unitType`、`unitSize`、`rarityTier` 和 `race` 不是属性；要让它们随英雄变化，请在 `unit_overrides.json` 中使用带 `heroID` 的条目。 |
+| `stat` | enum (`UnitStat`) | `MeleeAttack`, `MeleeDefense`, `WeaponStrength`, `Accuracy`, `Range`, `MissileStrength`, `HitPoints`, `Speed`, `Armor`, `ChargeBonus`, `Leadership`, `Ammunition`, `ChargeImpactDamage`, `AttackCooldown`, `ChargeCount`, `RateOfFire`, `ExplosionDamage`, `ExplosionRange`, `ExplosionForce`。这里使用的是 `UnitStat` 名称，而不是 `unit_overrides.json` 的字段名：`HitPoints` 对应 `hitPointsPerUnit`，`Accuracy` 对应 `attackAccuracy`，`Range` 对应 `baseRange`。`AttackCooldown` 和 `RateOfFire` 的单位是秒，因此负数 `value` 会让单位更快；结果不会低于 0.1。`RateOfFire` 与单位字段一样，只影响读取它的单位：炮兵和法师。`ExplosionRange` 和 `ExplosionForce` 只影响实时战斗，不影响自动结算（自动结算没有这些机制的模型）。`ChargeCount` 仍可读取，但已不再生效（见上方 `chargeCount`）。`BaseUnitCount` 与其他属性不同：它在招募小队时应用并写入存档，因此必须是 `Flat`，不能使用 `EnemyRace` 条件，也不能作为派系规则（违反这些的规则会被加载器跳过）。招募卡、召唤预览和血条都使用同一个数量。`unitType`、`unitSize`、`rarityTier` 和 `race` 不是属性；要让它们随英雄变化，请在 `unit_overrides.json` 中使用带 `heroID` 的条目。 |
 | `magnitudeKind` | enum | `Flat` (直接加上 `value`) or `PercentOfCurrentValue` (加上 `value` × 该属性的当前值 - 例如 `0.5` 表示 +50%) |
 | `value` | float | |
 
@@ -606,7 +606,7 @@ Mods/
 | 字段 | 类型 | 默认值 | 说明 |
 |---|---|---|---|
 | `largeUnitSpeedModifier` | float | 0.5 | 雨天时大型单位的速度倍率；必须大于零 |
-| `removesChargeBonus` | bool | true | 雨天时大型单位是否失去冲锋加成；设为 `false` 则可正常冲锋 |
+| `removesChargeBonus` | bool | true | 雨天时大型单位是否无法冲锋（无法冲刺，冲锋不会命中）；设为 `false` 则可正常冲锋 |
 | `autoResolveAccuracyModifier` | float | 0.5 | 雨天时自动结算预测中所有小队的命中率倍率 |
 
 ### `snow` - 雪天
