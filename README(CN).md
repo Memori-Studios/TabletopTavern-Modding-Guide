@@ -1,6 +1,6 @@
 # 桌上谈兵模组制作指南
 
-桌上谈兵支持通过模组来覆盖单位属性、派系颜色、英雄数据、英雄/派系的战斗加成、装备效果数值、商店与经济定价、敌方军队与驻军生成、种族被动调整、天气效果与概率以及本地化文本——无需编写代码，只需纯文本文件即可。本指南将介绍这些文件的格式。请参阅 [`ExampleMod/`](ExampleMod/) 文件夹，里面有一个完整可用的示例，你可以直接复制并修改。
+桌上谈兵支持通过模组来覆盖单位属性、派系颜色、英雄数据、英雄/派系的战斗加成、装备效果数值、商店与经济定价、敌方军队与驻军生成、种族被动调整、天气效果与概率、本地化文本以及单位模型。除单位模型外，其余内容都只需纯文本文件，无需编写代码。本指南将介绍这些文件的格式。请参阅 [`ExampleMod/`](ExampleMod/) 文件夹，里面有一个完整可用的示例，你可以直接复制并修改。
 
 ## 模组的存放位置
 
@@ -24,9 +24,10 @@ Mods/
         race_bonus_overrides.json <- optional
         weather_overrides.json <- optional
         localization_overrides.json <- optional
+        unit_visuals/          <- optional，新的单位模型（见下文）
 ```
 
-一个文件夹必须包含 `mod.json` 才会被识别为模组——这十个覆盖文件都是可选的，只需包含你需要的文件即可。以下划线 `_` 开头的文件夹名（如 `_Template`）为保留名称，不会被加载为模组。
+一个文件夹必须包含 `mod.json` 才会被识别为模组——这十个覆盖文件和 `unit_visuals` 文件夹都是可选的，只需包含你需要的文件即可。以下划线 `_` 开头的文件夹名（如 `_Template`）为保留名称，不会被加载为模组。
 
 新模组在游戏首次发现时会自动启用。你可以使用游戏内的 **模组** 菜单（从主菜单进入）来启用/禁用模组并调整其加载顺序——当多个模组修改了相同的内容时，列表中位置更靠下的模组内容会覆盖位置更靠上的模组。 **所有改动不会立即生效，需要在下一次重启游戏时才会应用。**
 
@@ -219,7 +220,7 @@ Mods/
 
 ### `attributeRules` 条目字段
 
-与 `statRules` 相同，区别在于没有 `stat`/`magnitudeKind`/`value`字段，取而代之的是一个单独的`grantedAttribute` (enum)——英雄会将此属性赋予符合条件的单位（若该单位尚未拥有此属性）。有效值：`StandardShields`, `ArmorPiercing`, `AntiInfantry`, `AntiLarge`, `Terrifying`, `Stalwart`, `Outrider`, `SwampCreature`, `ForestDweller`, `ChickenFlight`, `Ethereal`, `BloodFrenzy`, `Rage`, `Emblazing`, `Unstoppable`, `HeavyShields`, `ThrowingAxes`, `ArmorSundering`, `MonsterSlayer`, `ForgefuryTempering`, `FlamingAmmo`, `DragonsHoard`, `BackStabbers`, `ThickScales`.
+与 `statRules` 相同，区别在于没有 `stat`/`magnitudeKind`/`value`字段，取而代之的是一个单独的`grantedAttribute` (enum)——英雄会将此属性赋予符合条件的单位（若该单位尚未拥有此属性）。有效值：`StandardShields`, `ArmorPiercing`, `AntiInfantry`, `AntiLarge`, `Terrifying`, `Stalwart`, `Outrider`, `SwampCreature`, `ForestDweller`, `ChickenFlight`, `Ethereal`, `BloodFrenzy`, `Rage`, `Emblazing`, `Unstoppable`, `HeavyShields`, `ThrowingAxes`, `ArmorSundering`, `MonsterSlayer`, `ForgefuryTempering`, `FlamingAmmo`, `DragonsHoard`, `BackStabbers`, `ThickScales`, `BloodDrinker`.
 
 ### `factionRules` 条目字段
 
@@ -635,6 +636,41 @@ Mods/
 | `weathers[].likelihood` | float | 相对权重，零或更大；整个列表的总和必须大于零 |
 
 种族未知、天气未知或列表为空的条目会被跳过并记录警告，该区域保留原有概率。天气按战役种子逐节点随机生成，因此修改后的表在每次访问同一节点时仍会得到相同的天气。
+
+## `unit_visuals/` - 单位模型
+
+模组可以替换单位在战斗、招募卡牌、声望界面和收藏馆中的外观。单位的属性和行为保持不变，只更换模型、动画、道具和卡牌图标。
+
+单位模型无法手写。你需要在 Unity 中使用免费的烘焙工具 **TJBake** 制作：
+[github.com/Memori-Studios/TJBake](https://github.com/Memori-Studios/TJBake)。它的说明文档会一步步教你烘焙角色。将输出目录指向你的模组：
+
+```
+Mods/
+    MyModName/
+        mod.json
+        unit_visuals/
+            HelmwallDefenders/    <- 单位名称，见上方的单位名称参考，拼写和大小写必须完全一致
+                unit.json
+                anim.bin
+                anchors.bin
+                body_0.mesh.bin
+                ...
+                icon.png          <- 可选，256x256，替换单位的卡牌图标
+                rider/            <- 可选，为骑乘单位提供新的骑手
+```
+
+游戏会检查以下规则：
+
+- **文件夹名就是单位名称。** 游戏不认识的名称会被跳过，并记录一条警告。
+- **火炮和驻军城门** 暂时不能更换模型。
+- **会射击或施法的单位** 需要全部 15 个动画槽位。其他单位需要前 13 个。
+- **弓与剑。** 大多数远程单位在近战时会收起弓、拔出剑。如果你替换的单位会这样做，每个变体都必须恰好有一个 `bow` 道具和一个 `sword` 道具。如果它不会，变体就不能同时拥有两者。这样单位的战斗方式就与原来完全一致。
+- **骑手。** 骑乘单位可以在 `rider/` 中提供新的骑手，也可以保留游戏原有的骑手。无论哪种方式，坐骑都需要一个 `saddle` 道具。游戏中本来没有骑手的单位不能添加骑手。
+- **一到三个变体。** 部队会混用你提供的变体，不足三个时会重复使用。
+
+出现任何问题时，游戏会记录一条错误，指明文件夹、文件和违反的规则，该单位会继续使用原本的模型。大多数问题会在游戏启动时报告。弓与剑的规则在战斗加载时检查。
+
+完整的文件格式以及模型必须遵守的规则见 [`docs/unit-json-schema.md`](docs/unit-json-schema.md) 和 [`docs/unit-visual-contract.md`](docs/unit-visual-contract.md)（英文）。
 
 ## 测试你的模组
 

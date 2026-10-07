@@ -9,11 +9,11 @@
             "tierCounts": [
                 {
                     "tier": "1",
-                    "count": "3"
+                    "count": "2"
                 },
                 {
                     "tier": "2",
-                    "count": "3"
+                    "count": "2"
                 },
                 {
                     "tier": "3",
@@ -34,11 +34,11 @@
             "tierCounts": [
                 {
                     "tier": "1",
-                    "count": "3"
+                    "count": "2"
                 },
                 {
                     "tier": "2",
-                    "count": "2"
+                    "count": "1"
                 },
                 {
                     "tier": "3",
@@ -406,7 +406,7 @@
             "tierCounts": [
                 {
                     "tier": "1",
-                    "count": "4"
+                    "count": "3"
                 },
                 {
                     "tier": "2",
@@ -429,7 +429,7 @@
                 },
                 {
                     "tier": "3",
-                    "count": "2"
+                    "count": "1"
                 }
             ]
         },
@@ -455,7 +455,7 @@
                 },
                 {
                     "tier": "2",
-                    "count": "4"
+                    "count": "3"
                 }
             ]
         },
@@ -466,7 +466,7 @@
             "tierCounts": [
                 {
                     "tier": "1",
-                    "count": "3"
+                    "count": "2"
                 },
                 {
                     "tier": "2",
@@ -585,11 +585,11 @@
             "tierCounts": [
                 {
                     "tier": "2",
-                    "count": "3"
+                    "count": "4"
                 },
                 {
                     "tier": "3",
-                    "count": "6"
+                    "count": "4"
                 }
             ]
         },
@@ -626,11 +626,11 @@
             "tierCounts": [
                 {
                     "tier": "2",
-                    "count": "2"
+                    "count": "3"
                 },
                 {
                     "tier": "3",
-                    "count": "7"
+                    "count": "6"
                 }
             ]
         }

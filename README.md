@@ -1,6 +1,6 @@
 # Tabletop Tavern Modding Guide
 
-Tabletop Tavern supports mods that override unit stats, faction colors, hero data, hero/faction battle bonuses, gear effect magnitudes, shop/economy pricing, enemy army/garrison generation, race passive tuning, weather effects and odds, and localized text — no code required, just plain text files. This guide covers the file formats. See the [`ExampleMod/`](ExampleMod/) folder for a complete, working example you can copy and edit.
+Tabletop Tavern supports mods that override unit stats, faction colors, hero data, hero/faction battle bonuses, gear effect magnitudes, shop/economy pricing, enemy army/garrison generation, race passive tuning, weather effects and odds, localized text and unit models. Everything except unit models is plain text files with no code required. This guide covers the file formats. See the [`ExampleMod/`](ExampleMod/) folder for a complete, working example you can copy and edit.
 
 ## Where mods go
 
@@ -24,9 +24,10 @@ Mods/
         race_bonus_overrides.json <- optional
         weather_overrides.json <- optional
         localization_overrides.json <- optional
+        unit_visuals/          <- optional, new unit models (see below)
 ```
 
-A folder needs `mod.json` to be recognized as a mod at all — the ten override files are each optional, include only the ones you need. Folder names starting with `_` (like `_Template`) are reserved and never loaded as mods.
+A folder needs `mod.json` to be recognized as a mod at all — the ten override files and the `unit_visuals` folder are each optional, include only the ones you need. Folder names starting with `_` (like `_Template`) are reserved and never loaded as mods.
 
 New mods are enabled automatically the first time the game finds them. Use the in-game **Mods** menu (from the main menu) to enable/disable mods and reorder them — when more than one mod changes the same thing, the one lower in the list wins. **Changes apply the next time you restart the game**, not live.
 
@@ -231,7 +232,7 @@ This is the most powerful and most complex file. It replaces the numeric bonuses
 
 ### `attributeRules` entry fields
 
-Same as `statRules` except instead of `stat`/`magnitudeKind`/`value`, there's a single `grantedAttribute` (enum) — the hero grants this attribute to matching units if they don't already have it. Valid values: `StandardShields`, `ArmorPiercing`, `AntiInfantry`, `AntiLarge`, `Terrifying`, `Stalwart`, `Outrider`, `SwampCreature`, `ForestDweller`, `ChickenFlight`, `Ethereal`, `BloodFrenzy`, `Rage`, `Emblazing`, `Unstoppable`, `HeavyShields`, `ThrowingAxes`, `ArmorSundering`, `MonsterSlayer`, `ForgefuryTempering`, `FlamingAmmo`, `DragonsHoard`, `BackStabbers`, `ThickScales`.
+Same as `statRules` except instead of `stat`/`magnitudeKind`/`value`, there's a single `grantedAttribute` (enum) — the hero grants this attribute to matching units if they don't already have it. Valid values: `StandardShields`, `ArmorPiercing`, `AntiInfantry`, `AntiLarge`, `Terrifying`, `Stalwart`, `Outrider`, `SwampCreature`, `ForestDweller`, `ChickenFlight`, `Ethereal`, `BloodFrenzy`, `Rage`, `Emblazing`, `Unstoppable`, `HeavyShields`, `ThrowingAxes`, `ArmorSundering`, `MonsterSlayer`, `ForgefuryTempering`, `FlamingAmmo`, `DragonsHoard`, `BackStabbers`, `ThickScales`, `BloodDrinker`.
 
 ### `factionRules` entry fields
 
@@ -680,6 +681,48 @@ An entry **replaces that region's whole weather table**, so list every weather y
 | `weathers[].likelihood` | float | relative weight, zero or more; the list must add up to more than zero |
 
 An entry with an unknown race, an unknown weather or an empty list is skipped with a warning and the region keeps its shipped odds. Weather is rolled per map node from the campaign seed, so a changed table still gives the same weather on every visit to a node.
+
+## `unit_visuals/` - unit models
+
+A mod can replace how a unit looks in battle, on the recruit cards, on the prestige screen and in the Collection. The
+unit keeps its stats and behaviour; only the model, its animations, its props and its card icon change.
+
+Unit models are not written by hand. You make them in Unity with **TJBake**, a free baking tool:
+[github.com/Memori-Studios/TJBake](https://github.com/Memori-Studios/TJBake). Its readme walks through baking a
+character. Point its output at your mod:
+
+```
+Mods/
+    MyModName/
+        mod.json
+        unit_visuals/
+            HelmwallDefenders/    <- the unit's name from the unit name reference above, exact spelling and case
+                unit.json
+                anim.bin
+                anchors.bin
+                body_0.mesh.bin
+                ...
+                icon.png          <- optional, 256x256, replaces the unit's card icon
+                rider/            <- optional, a new rider for a mounted unit
+```
+
+Rules the game checks:
+
+- **The folder name is the unit's name.** A name the game does not know is skipped with a warning.
+- **Artillery and the garrison gate** cannot take a new model yet.
+- **Units that shoot or cast** need all 15 animation slots. Other units need the first 13.
+- **Bow and sword.** Most ranged units hide their bow and draw a sword in melee. If the unit you replace does that,
+  every variant needs exactly one `bow` prop and one `sword` prop. If it does not, a variant may not have both. This
+  keeps the unit fighting the way it always has.
+- **Riders.** A mounted unit can bring a new rider in `rider/`, or keep the game's rider. Either way the mount needs a
+  `saddle` prop. A unit with no rider in the game cannot gain one.
+- **One to three variants.** Squads mix the variants you supply, repeating them when there are fewer than three.
+
+When anything is wrong, the game logs one error naming the folder, the file and the rule, and the unit keeps its
+normal model. Most problems are reported when the game starts. The bow and sword rule is checked when a battle loads.
+
+The full file format and the rules a model must follow are in [`docs/unit-json-schema.md`](docs/unit-json-schema.md)
+and [`docs/unit-visual-contract.md`](docs/unit-visual-contract.md).
 
 ## Testing your mod
 

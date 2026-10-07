@@ -51,6 +51,7 @@
         { "heroID": "16", "localizationKey": "heroBonusTitle32", "condition": { "filterKind": "UnitName", "unitNames": ["StegoplateGuard"] }, "stat": "WeaponStrength", "magnitudeKind": "Flat", "value": "4" }
     ],
     "attributeRules": [
+        { "heroID": "3", "localizationKey": "heroBonusTitle6", "condition": { "filterKind": "UnitTag", "tag": "Goblin" }, "grantedAttribute": "BackStabbers" },
         { "heroID": "4", "localizationKey": "heroBonusTitle7", "condition": { "filterKind": "UnitName", "unitNames": ["OrcRavagers"] }, "grantedAttribute": "Terrifying" },
         { "heroID": "6", "localizationKey": "heroBonusTitle12", "condition": { "filterKind": "Unconditional" }, "grantedAttribute": "Stalwart" },
         { "heroID": "9", "localizationKey": "heroBonusTitle18", "condition": { "filterKind": "Unconditional" }, "grantedAttribute": "Outrider" },
