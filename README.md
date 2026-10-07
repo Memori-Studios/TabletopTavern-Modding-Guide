@@ -712,7 +712,7 @@ Rules the game checks:
 - **Artillery and the garrison gate** cannot take a new model yet.
 - **Units that shoot or cast** need all 15 animation slots. Other units need the first 13.
 - **Bow and sword.** Most ranged units hide their bow and draw a sword in melee. If the unit you replace does that,
-  every variant needs exactly one `bow` prop and one `sword` prop. If it does not, a variant may not have both. This
+  every variant needs a `bow` prop and a `sword` prop. If it does not, a variant may not have both. This
   keeps the unit fighting the way it always has.
 - **Riders.** A mounted unit can bring a new rider in `rider/`, or keep the game's rider. Either way the mount needs a
   `saddle` prop. A unit with no rider in the game cannot gain one.
