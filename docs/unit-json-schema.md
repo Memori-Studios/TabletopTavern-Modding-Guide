@@ -77,14 +77,14 @@ relative to the folder, no subfolders except `rider/`.
 | `slots[].loop`, `returnToIdle` | bool | See the contract, section 3. `loop` and `returnToIdle` are never both true. |
 | `slots[].returnAt` | float | 0.5 to 1.0, default 0.9, only read when `returnToIdle` is true. |
 | `anchors[]` | string[] | Names, unique, in `anchors.bin` order. May be empty. |
-| `materials[]` | array | At least one. Texture file names must exist in the folder. `tint` is linear RGBA. |
+| `materials[]` | array | At least one. Texture file names must exist in the folder. `tint` is linear RGBA. `emissionColor` (optional, default white) is the HDR colour the emission map is multiplied by. |
 | `lodSwitch[]` | float[] | 0 to 2 entries, descending, each in (0, 1): the screen-height fraction below which the next LOD shows. Length equals LOD count minus 1 on every variant. |
 | `variants[]` | array | 1 to 3. Every variant has the same LOD count. |
 | `variants[].lods[].meshes[]` | array | At least one mesh per LOD. `material` indexes `materials`. |
-| `variants[].attachments[]` | array | `anchor` must be in `anchors`, `role` is one of `prop`, `bow`, `sword`, `shield`, `saddle`, `lods` lists the LOD indices that show it (default `[0, 1]`). |
+| `variants[].attachments[]` | array | `anchor` must be in `anchors`, `role` is one of `prop`, `bow`, `sword`, `shield`, `saddle`, `lods` lists the LOD indices that show it (default `[0, 1]`). `tag` (optional) is free text for the host game; TJBake only carries it. |
 | `rider` | string | Optional, always `"rider/"`. |
 
-More than one attachment of a role (other than `prop`) fails the file. A unit that shoots or casts needs slots 0 to 14.
+More than one `saddle` fails the file. Repeated `bow`, `sword` or `shield` attachments are allowed; the game marks each one and its set-up rules decide what shows, as for its own units. A unit that shoots or casts needs slots 0 to 14.
 A unit with a rider, its own or the built-in one, needs a `saddle` on every variant. `bow` and `sword` must match the
 built-in unit: both on every variant when it swaps bow for sword in melee, never both when it does not (checked at
 battle load, see the contract section 6).

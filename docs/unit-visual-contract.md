@@ -124,7 +124,7 @@ are rigid meshes that follow one anchor. The game cares only about **roles**:
 
 Rules:
 
-- Anchor names are free text; roles are the fixed set above, at most one of each per variant except `prop`.
+- Anchor names are free text; roles are the fixed set above. A variant has at most one `saddle`; a repeated weapon role is marked like any other and the set-up systems treat it as they treat the game's own repeated props (the bow-to-sword swap wires only one).
 - **Bow and sword match the built-in unit.** The swap is gameplay: it is what stops a ranged unit shooting in melee,
   and it only runs when both props exist. So a variant has one `bow` and one `sword` exactly when the built-in unit
   swaps (15 of the 23 ranged and hybrid units, checked 2026-10-06), and never both otherwise. The game checks this
