@@ -1,0 +1,13 @@
+{
+    "overrides": [
+        { "locale": "en", "key": "LevySwordsmen", "text": "Dude Bro" },
+        { "locale": "de", "key": "LevySwordsmen", "text": "Dude Bro" },
+        { "locale": "es", "key": "LevySwordsmen", "text": "Dude Bro" },
+        { "locale": "fr", "key": "LevySwordsmen", "text": "Dude Bro" },
+        { "locale": "ja", "key": "LevySwordsmen", "text": "Dude Bro" },
+        { "locale": "ko", "key": "LevySwordsmen", "text": "Dude Bro" },
+        { "locale": "ru", "key": "LevySwordsmen", "text": "Dude Bro" },
+        { "locale": "zh", "key": "LevySwordsmen", "text": "Dude Bro" },
+        { "locale": "zh-Hant", "key": "LevySwordsmen", "text": "Dude Bro" }
+    ]
+}

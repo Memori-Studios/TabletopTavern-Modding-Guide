@@ -1,6 +1,6 @@
 # Tabletop Tavern Modding Guide
 
-Tabletop Tavern supports mods that override unit stats, faction colors, hero data, hero/faction battle bonuses, gear effect magnitudes, shop/economy pricing, enemy army/garrison generation, race passive tuning, weather effects and odds, localized text and unit models. Everything except unit models is plain text files with no code required. This guide covers the file formats. See the [`ExampleMod/`](ExampleMod/) folder for a complete, working example you can copy and edit.
+Tabletop Tavern supports mods that override unit stats, faction colors, hero data, hero/faction battle bonuses, gear effect magnitudes, shop/economy pricing, enemy army/garrison generation, race passive tuning, weather effects and odds, localized text and unit models. Everything except unit models is plain text files with no code required. This guide covers the file formats. See the [`ExampleMod/`](ExampleMod/) folder for a complete, working example you can copy and edit, and [`ExampleUnitMod/`](ExampleUnitMod/) for a unit model example.
 
 ## Where mods go
 
@@ -723,6 +723,13 @@ normal model. Most problems are reported when the game starts. The bow and sword
 
 The full file format and the rules a model must follow are in [`docs/unit-json-schema.md`](docs/unit-json-schema.md)
 and [`docs/unit-visual-contract.md`](docs/unit-visual-contract.md).
+
+### Example: Dude Bro
+
+[`ExampleUnitMod/`](ExampleUnitMod/) is a complete unit model mod you can copy. It turns Levy Swordsmen into "Dude
+Bros", bare-knuckle brawlers built from Synty Studios' POLYGON Guy (used with permission), with three looks, 13
+animations, a new card icon and a new name. Its README walks through repainting it, renaming it and making your own,
+and its `source/` folder has the script that built it and a checker you can run on your own unit folder.
 
 ## Testing your mod
 
