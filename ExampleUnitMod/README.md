@@ -16,9 +16,8 @@ your own.
 
 ![preview](preview.png)
 
-**Model credit:** "POLYGON Guy" (the Mixamo-ready base character) by Synty Studios, <https://syntystudios.com>, used
-in this example with Synty Studios' permission. Changes: converted to the game's unit format, shorts and new colours
-painted, animations added.
+**The model** was made for this example. A Python script in `source/` builds the body, the skeleton and the
+animations in code, with no model file. Everything in this mod is CC0: copy it and change it however you like.
 
 ---
 
@@ -54,10 +53,8 @@ ExampleUnitMod/
             palette_black_beard.png
             icon.png                the unit card picture, 256 x 256
     source/
-        make_polygon_guy.py         the script that turned the Synty model into this folder (optional)
-        fbxbin.py                   a small FBX file reader the script uses
+        make_dude_bro.py            the script that builds everything in unit_visuals (optional)
         check_unit_visual.py        a checker you can run on your own unit folder
-        Mixamo_POLYGON_Guy_Naked.fbx  the original Synty model the script reads
 ```
 
 The game reads `mod.json`, `localization_overrides.json` and the `unit_visuals` folder. The `source` folder is ignored
@@ -107,8 +104,8 @@ Change the text and restart the game. A language you leave out keeps the game's 
 ## 4. Make your own reskin
 
 A unit model is normally built in **Unity** with **TJBake**, a free tool that turns an animated character into the
-files above. This example took a shortcut: the Synty model is rigged but has no animations, so the script in
-`source/` reads the model file itself and adds simple animations in code. Most people will find Unity easier.
+files above. This example took a shortcut: the script in `source/` builds a simple low-poly body and its animations
+in code and writes the files directly. Most people will find Unity easier.
 
 ### What you need
 
@@ -131,7 +128,7 @@ Artillery and the garrison gate cannot be reskinned yet.
 ### Step 2: Prepare the character
 
 - **Size and direction.** Build it in metres, standing with its feet at height 0 and facing forward (Unity's +Z, the
-  blue arrow). A person is about 1.8 m tall; this one is 1.79 m. Keep it narrower than about 1.5 m at the feet or it
+  blue arrow). A person is about 1.8 m tall, like this one. Keep it narrower than about 1.5 m at the feet or it
   overlaps its neighbours in formation.
 - **In place.** The animations must not walk away from the origin. Turn off root motion. The game moves the unit;
   the model only animates on the spot.
@@ -203,14 +200,16 @@ Copy `mod.json` from this mod into your mod folder and change the name, author a
 
 ### Rebuilding this example from source
 
-`source/make_polygon_guy.py` needs Python 3.9 or newer with numpy and Pillow (`pip install numpy pillow`). The Synty
-model it reads is in the same folder. From inside `source/`, run:
+`source/make_dude_bro.py` needs Python 3.9 or newer with numpy and Pillow (`pip install numpy pillow`). From inside
+`source/`, run:
 
 ```text
-python make_polygon_guy.py Mixamo_POLYGON_Guy_Naked.fbx ../unit_visuals/LevySwordsmen --preview ../preview.png
+python make_dude_bro.py ../unit_visuals/LevySwordsmen --preview ../preview.png
 ```
 
-Change the animations or the palette colours in the script, run it again, and restart the game to see them.
+The body is a list of rings and boxes in `make_body()`: change a radius to make the arms thicker, or a height to
+make the shorts longer. Change the animations or the palette colours the same way, run the script again, and restart
+the game to see them.
 
 ---
 
@@ -271,10 +270,8 @@ ask for.
 
 ## Credits and licences
 
-- **Model:** "POLYGON Guy" by Synty Studios, <https://syntystudios.com>, used with Synty Studios' permission. The model,
-  including `source/Mixamo_POLYGON_Guy_Naked.fbx`, stays under Synty's licence. Ask Synty before you use it anywhere else.
-- **Animations, palettes, icon, preview and the scripts in `source/`:** made for this example and released under CC0.
-  Copy them, change them and share them however you like.
+- **Everything in this mod** (the model, animations, palettes, icon, preview and the scripts in `source/`) was made for
+  this example and is released under CC0. Copy it, change it and share it however you like.
 
 More detail on the file format: the Tabletop Tavern modding guide, `docs/unit-json-schema.md` and
 `docs/unit-visual-contract.md`.

@@ -1,14 +1,12 @@
 """
-Builds the Polygon Guy reskin of Levy Swordsmen as a TJBake unit visual folder, straight from the Synty FBX.
+Builds the Dude Bro reskin of Levy Swordsmen as a TJBake unit visual folder. Everything is made here in code: the
+skeleton, a low-poly body, the colour palettes and the animations. No model file is needed.
 
-Model: "Mixamo POLYGON Guy (Naked)" by Synty Studios, shared for this example with Synty's permission.
-
-The model is rigged but has no animations, so this script adds them. It reads the FBX itself (fbxbin.py), keeps the
-mesh and skin weights, paints its own colour palettes, and writes the files the game reads. A reskin is usually baked
-in Unity with the TJBake window instead; see the README.
+A reskin is usually baked in Unity with the TJBake window instead; see the README. This script shows what the files
+hold, and gives you a body you can change by editing numbers.
 
 Usage:
-    python make_polygon_guy.py <Mixamo_POLYGON_Guy_Naked.fbx> <output unit folder> [--preview <png>] [--sheet <png>]
+    python make_dude_bro.py <output unit folder> [--preview <png>] [--sheet <png>]
 
 Needs Python 3.9+, numpy and Pillow:  pip install numpy pillow
 """
@@ -21,9 +19,6 @@ import sys
 
 import numpy as np
 from PIL import Image
-
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import fbxbin  # noqa: E402
 
 UNIT_NAME = "LevySwordsmen"
 FPS = 30
@@ -40,10 +35,6 @@ PALETTES = [
     {"file": "palette_black_beard.png", "skin": (110, 74, 52), "eyes": (24, 20, 18), "beard": (28, 24, 22),
      "shorts": (78, 92, 56)},
 ]
-# The FBX points at a Synty colour atlas; these are the three spots it uses.
-SPOT_TO_BLOCK = {(0.314, 0.934): "skin", (0.03, 0.816): "eyes", (0.325, 0.89): "beard"}
-# Skin triangles with every corner between these heights (metres) become shorts.
-SHORTS = (0.70, 0.975)
 
 
 def palette_image(p, size=256):
@@ -56,108 +47,264 @@ def palette_image(p, size=256):
 
 # endregion
 
-# region Reading the FBX
+# region Skeleton
+
+# Joint rest positions in metres: a T-pose facing +Z, feet at height 0, left side at -X. The right side mirrors the left.
+CENTRE_JOINTS = [
+    ("Root", None, (0, 0, 0)),
+    ("Hips", "Root", (0, 0.88, 0)),
+    ("Spine_01", "Hips", (0, 0.98, -0.01)),
+    ("Spine_02", "Spine_01", (0, 1.15, -0.01)),
+    ("Spine_03", "Spine_02", (0, 1.32, -0.02)),
+    ("Neck", "Spine_03", (0, 1.46, -0.02)),
+    ("Head", "Neck", (0, 1.56, 0)),
+]
+LEFT_JOINTS = [
+    ("Clavicle", "Spine_03", (-0.07, 1.39, 0.01)),
+    ("Shoulder", "Clavicle", (-0.19, 1.39, -0.03)),
+    ("Elbow", "Shoulder", (-0.52, 1.37, -0.04)),
+    ("Hand", "Elbow", (-0.79, 1.37, -0.03)),
+    ("Thumb_01", "Hand", (-0.82, 1.36, 0.0)),
+    ("Thumb_02", "Thumb_01", (-0.85, 1.35, 0.035)),
+    ("Thumb_03", "Thumb_02", (-0.885, 1.345, 0.06)),
+    ("Finger_01", "Hand", (-0.885, 1.37, -0.03)),
+    ("Finger_02", "Finger_01", (-0.94, 1.37, -0.03)),
+    ("UpperLeg", "Hips", (-0.1, 0.84, -0.02)),
+    ("LowerLeg", "UpperLeg", (-0.11, 0.46, -0.01)),
+    ("Ankle", "LowerLeg", (-0.11, 0.08, -0.03)),
+    ("Ball", "Ankle", (-0.11, 0.02, 0.08)),
+]
+CENTRE = {name for name, _, _ in CENTRE_JOINTS}
 
 
-def load(path):
-    _, root = fbxbin.read(path)
-    objs = {n.props[0]: n for n in root.find("Objects").children if n.props}
-    name = {k: o.props[1].split("\x00")[0] for k, o in objs.items()}
-    joints = [k for k, o in objs.items() if o.name == "Model" and o.props[2] == "LimbNode"]
-    parent, cluster_bone = {}, {}
-    for c in root.find("Connections").children:
-        if c.props[0] != "OO":
-            continue
-        a, b = c.props[1], c.props[2]
-        if a in joints and b in joints:
-            parent[a] = b
-        elif a in joints and objs.get(b) is not None and objs[b].name == "Deformer":
-            cluster_bone[b] = a
-
-    # Hands share finger names; give each finger the side of the hand it hangs from.
-    def side(k):
-        while k in parent:
-            if name[k].endswith("_L") or name[k].endswith("_R"):
-                return name[k][-2:]
-            k = parent[k]
-        return ""
-    bone_name = {k: name[k] if name[k][-2:] in ("_L", "_R") or not side(k) else name[k] + side(k) for k in joints}
-
-    # FBX is right-handed and Unity left-handed: mirror X, as Unity's importer does. Units are centimetres.
-    flip = np.array([-1.0, 1.0, 1.0])
-    world = {}
-    for pn in [o for o in objs.values() if o.name == "Pose"][0].findall("PoseNode"):
-        world[pn.find("Node").props[0]] = fbxbin.arr(pn.find("Matrix")).reshape(4, 4).T
-    rest = {}
-    for k in joints:
-        rest[bone_name[k]] = world[k][:3, 3] * flip if k in world else None
-    order = []
-
-    def visit(k):
-        if bone_name[k] in [bone_name[o] for o in order]:
-            return
-        if k in parent:
-            visit(parent[k])
-        order.append(k)
-    for k in joints:
-        visit(k)
-    for k in order:
-        if rest[bone_name[k]] is None:
-            rest[bone_name[k]] = rest[bone_name[parent[k]]].copy() if k in parent else np.zeros(3)
-    bones = [bone_name[k] for k in order]
-    joint_parent = {bone_name[k]: (bone_name[parent[k]] if k in parent else None) for k in order}
-
-    geo = [o for o in objs.values() if o.name == "Geometry"][0]
-    pos = fbxbin.arr(geo.find("Vertices")).reshape(-1, 3) * 0.01 * flip
-    weights = np.zeros((len(pos), len(bones)))
-    for cl, k in cluster_bone.items():
-        idx = fbxbin.arr(objs[cl].find("Indexes"), int)
-        if idx is None:
-            continue
-        weights[idx, bones.index(bone_name[k])] = fbxbin.arr(objs[cl].find("Weights"))
-
-    pvi = fbxbin.arr(geo.find("PolygonVertexIndex"), int)
-    corner = np.where(pvi < 0, -pvi - 1, pvi).reshape(-1, 3)
-    normals = fbxbin.arr(geo.find("LayerElementNormal").find("Normals")).reshape(-1, 3, 3) * flip
-    uvl = geo.find("LayerElementUV")
-    uv = fbxbin.arr(uvl.find("UV")).reshape(-1, 2)[fbxbin.arr(uvl.find("UVIndex"), int)].reshape(-1, 3, 2)
-    blocks = []
-    for t in range(len(corner)):
-        block = SPOT_TO_BLOCK[tuple(np.round(uv[t, 0], 3))]
-        if block == "skin" and np.all((pos[corner[t]][:, 1] >= SHORTS[0]) & (pos[corner[t]][:, 1] <= SHORTS[1])):
-            block = "shorts"
-        blocks.append(block)
-    return {"pos": pos, "weights": weights, "bones": bones, "rest": rest, "parent": joint_parent,
-            "corner": corner, "normals": normals, "blocks": blocks}
+def mirror_name(b):
+    return b[:-2] + "_R" if b.endswith("_L") else b
 
 
-def build_mesh(m):
-    """One skinned mesh. Corners sharing position, normal and colour block share a vertex."""
-    keys, verts, tris = {}, [], []
-    for t, block in enumerate(m["blocks"]):
-        tri = []
-        for k in range(3):
-            vi = int(m["corner"][t, k])
-            n = m["normals"][t, k]
-            key = (vi, round(float(n[0]), 4), round(float(n[1]), 4), round(float(n[2]), 4), block)
-            if key not in keys:
-                keys[key] = len(verts)
-                verts.append((vi, n, BLOCK_UV[block]))
-            tri.append(keys[key])
-        a, b, c = tri
-        pa, pb, pc = (m["pos"][verts[i][0]] for i in tri)
-        navg = sum(verts[i][1] for i in tri)
-        # Keep the face whose winding agrees with the authored normal (Unity's front face).
-        if np.dot(np.cross(pb - pa, pc - pa), navg) < 0:
+def skeleton():
+    bones, parent, rest = [], {}, {}
+    for name, par, p in CENTRE_JOINTS:
+        bones.append(name)
+        parent[name] = par
+        rest[name] = np.array(p, float)
+    for s, flip in (("_L", 1), ("_R", -1)):
+        for name, par, p in LEFT_JOINTS:
+            bones.append(name + s)
+            parent[name + s] = par if par in CENTRE else par + s
+            rest[name + s] = np.array(p, float) * (flip, 1, 1)
+    return bones, parent, rest
+
+# endregion
+
+# region Building the body
+
+
+class Body:
+    """Flat-shaded triangles. Each corner carries its own bone weights; each triangle one palette block."""
+
+    def __init__(self):
+        self.tris = []
+
+    def tri(self, pts, weights, block, inside):
+        a, b, c = (np.asarray(p, float) for p in pts)
+        if np.dot(np.cross(b - a, c - a), (a + b + c) / 3 - np.asarray(inside, float)) < 0:
             b, c = c, b
-        tris.append((a, b, c))
-    vi = np.array([v[0] for v in verts])
-    w = m["weights"][vi]
-    top = np.argsort(-w, axis=1)[:, :4]
-    tw = np.take_along_axis(w, top, axis=1)
+            weights = (weights[0], weights[2], weights[1])
+        self.tris.append(((a, b, c), weights, block))
+
+    def quad(self, pts, weights, block, inside):
+        self.tri((pts[0], pts[1], pts[2]), (weights[0], weights[1], weights[2]), block, inside)
+        self.tri((pts[0], pts[2], pts[3]), (weights[0], weights[2], weights[3]), block, inside)
+
+    def mirrored(self):
+        """Adds a copy of every left-side triangle on the right: X flips and _L bones become _R."""
+        for (a, b, c), ws, block in list(self.tris):
+            if max(p[0] for p in (a, b, c)) >= -1e-6:
+                continue
+            flip = np.array([-1.0, 1.0, 1.0])
+            ws = tuple({mirror_name(k): v for k, v in w.items()} for w in ws)
+            self.tris.append(((c * flip, b * flip, a * flip), (ws[2], ws[1], ws[0]), block))
+
+
+def frame(axis):
+    """Two unit vectors across an axis. For a vertical axis they are X and Z, so a flat side faces forward."""
+    d = np.asarray(axis, float) / np.linalg.norm(axis)
+    ref = np.array([0.0, 0.0, 1.0]) if abs(d[2]) < 0.9 else np.array([0.0, 1.0, 0.0])
+    v = ref - d * np.dot(ref, d)
+    v /= np.linalg.norm(v)
+    return np.cross(v, d), v
+
+
+def loft(body, rings, sides, axis, block="skin", caps=(True, True)):
+    """A tube through rings of (centre, radius across, radius front-to-back, weights). block may be a function of the
+    triangle's centre."""
+    u, v = frame(axis)
+    off = math.pi / 2 - math.pi / sides
+    loops = []
+    for c, ru, rv, w in rings:
+        c = np.asarray(c, float)
+        loops.append([c + ru * math.cos(off + 2 * math.pi * k / sides) * u +
+                      rv * math.sin(off + 2 * math.pi * k / sides) * v for k in range(sides)])
+
+    def pick(pts):
+        return block(np.mean(pts, axis=0)) if callable(block) else block
+
+    for i in range(len(rings) - 1):
+        inside = (np.asarray(rings[i][0], float) + np.asarray(rings[i + 1][0], float)) / 2
+        wa, wb = rings[i][3], rings[i + 1][3]
+        for k in range(sides):
+            k2 = (k + 1) % sides
+            pts = (loops[i][k], loops[i][k2], loops[i + 1][k2], loops[i + 1][k])
+            body.quad(pts, (wa, wa, wb, wb), pick(pts), inside)
+    for end, nxt, on in ((0, 1, caps[0]), (-1, -2, caps[1])):
+        if not on:
+            continue
+        c = np.asarray(rings[end][0], float)
+        inside = c + (np.asarray(rings[nxt][0], float) - c) * 0.5
+        for k in range(sides):
+            pts = (c, loops[end][k], loops[end][(k + 1) % sides])
+            body.tri(pts, (rings[end][3],) * 3, pick(pts), inside)
+
+
+def segment(body, p0, p1, r0, r1, w0, w1, sides=4, block="skin"):
+    """A short tapered tube from p0 to p1, for fingers and thumbs."""
+    loft(body, [(p0, r0[0], r0[1], w0), (p1, r1[0], r1[1], w1)], sides, np.subtract(p1, p0), block)
+
+
+def block_hex(body, corners, weights, block="skin"):
+    """Eight corners: four on the bottom, then the four above them in the same order."""
+    c = np.asarray(corners, float)
+    inside = c.mean(axis=0)
+    for f in ((0, 1, 2, 3), (4, 5, 6, 7), (0, 1, 5, 4), (1, 2, 6, 5), (2, 3, 7, 6), (3, 0, 4, 7)):
+        body.quad([c[i] for i in f], (weights,) * 4, block, inside)
+
+
+def box(body, centre, half, weights, block="skin"):
+    x, y, z = centre
+    hx, hy, hz = half
+    block_hex(body, [(x - hx, y - hy, z - hz), (x + hx, y - hy, z - hz), (x + hx, y - hy, z + hz), (x - hx, y - hy, z + hz),
+                     (x - hx, y + hy, z - hz), (x + hx, y + hy, z - hz), (x + hx, y + hy, z + hz), (x - hx, y + hy, z + hz)],
+              weights, block)
+
+
+def W(**w):
+    """Bone weights by bone name."""
+    return w
+
+
+# Shorts run from the waist down to a hem just above mid-thigh.
+WAIST, HEM = 0.975, 0.716
+
+
+def make_body():
+    body = Body()
+
+    # Torso: hips to shoulders, eight sides.
+    loft(body, [
+        ((0, 0.78, 0.0), 0.11, 0.08, W(Hips=1)),
+        ((0, 0.86, 0.0), 0.155, 0.1, W(Hips=1)),
+        ((0, 0.97, 0.0), 0.145, 0.095, W(Hips=0.4, Spine_01=0.6)),
+        ((0, 1.08, 0.005), 0.145, 0.098, W(Spine_01=0.6, Spine_02=0.4)),
+        ((0, 1.2, 0.01), 0.16, 0.11, W(Spine_02=0.7, Spine_03=0.3)),
+        ((0, 1.32, 0.005), 0.185, 0.115, W(Spine_03=1)),
+        ((0, 1.41, -0.01), 0.17, 0.095, W(Spine_03=1)),
+        ((0, 1.46, -0.02), 0.1, 0.07, W(Spine_03=0.5, Neck=0.5)),
+    ], 8, (0, 1, 0), block=lambda c: "shorts" if c[1] < WAIST else "skin")
+
+    # Neck.
+    loft(body, [
+        ((0, 1.4, -0.02), 0.062, 0.058, W(Spine_03=1)),
+        ((0, 1.48, -0.015), 0.056, 0.056, W(Neck=1)),
+        ((0, 1.56, 0.0), 0.058, 0.06, W(Neck=0.5, Head=0.5)),
+        ((0, 1.59, 0.0), 0.058, 0.06, W(Head=1)),
+    ], 6, (0, 1, 0))
+
+    # Head: a faceted egg. The lower front is the beard (skin-coloured on the clean-shaven variant).
+    head = W(Head=1)
+    loft(body, [
+        ((0, 1.545, 0.0), 0.055, 0.06, head),
+        ((0, 1.59, 0.015), 0.085, 0.095, head),
+        ((0, 1.645, 0.01), 0.098, 0.105, head),
+        ((0, 1.705, 0.0), 0.1, 0.11, head),
+        ((0, 1.765, -0.01), 0.088, 0.1, head),
+        ((0, 1.8, -0.01), 0.05, 0.06, head),
+    ], 8, (0, 1, 0), block=lambda c: "beard" if c[1] < 1.64 and c[2] > -0.03 else "skin")
+
+    # Face: eyes and brows use the dark block; nose and ears are skin.
+    box(body, (-0.033, 1.675, 0.103), (0.012, 0.011, 0.008), head, "eyes")
+    box(body, (-0.035, 1.708, 0.103), (0.022, 0.006, 0.009), head, "eyes")
+    nose = [(-0.016, 1.635, 0.1), (0.016, 1.635, 0.1), (0.016, 1.635, 0.135), (-0.016, 1.635, 0.135),
+            (-0.01, 1.68, 0.1), (0.01, 1.68, 0.1), (0.008, 1.672, 0.112), (-0.008, 1.672, 0.112)]
+    block_hex(body, nose, head)
+    box(body, (-0.1, 1.665, -0.005), (0.012, 0.028, 0.022), head)
+
+    # Left arm: shoulder to wrist, six sides.
+    loft(body, [
+        ((-0.13, 1.39, -0.03), 0.06, 0.06, W(Clavicle_L=0.7, Shoulder_L=0.3)),
+        ((-0.2, 1.385, -0.03), 0.072, 0.07, W(Clavicle_L=0.3, Shoulder_L=0.7)),
+        ((-0.3, 1.38, -0.035), 0.062, 0.06, W(Shoulder_L=1)),
+        ((-0.44, 1.375, -0.04), 0.05, 0.05, W(Shoulder_L=1)),
+        ((-0.52, 1.37, -0.04), 0.045, 0.045, W(Shoulder_L=0.5, Elbow_L=0.5)),
+        ((-0.6, 1.37, -0.04), 0.05, 0.052, W(Elbow_L=1)),
+        ((-0.72, 1.37, -0.035), 0.04, 0.045, W(Elbow_L=1)),
+        ((-0.79, 1.37, -0.03), 0.03, 0.04, W(Elbow_L=0.5, Hand_L=0.5)),
+    ], 6, (-1, 0, 0))
+
+    # Left hand: a palm, two finger blocks (they curl into a fist) and a two-part thumb.
+    box(body, (-0.835, 1.37, -0.03), (0.05, 0.019, 0.042), W(Hand_L=1))
+    segment(body, (-0.88, 1.37, -0.03), (-0.94, 1.37, -0.03), (0.024, 0.055), (0.022, 0.055),
+            W(Finger_01_L=1), W(Finger_01_L=1))
+    segment(body, (-0.94, 1.37, -0.03), (-0.985, 1.367, -0.03), (0.022, 0.055), (0.018, 0.05),
+            W(Finger_02_L=1), W(Finger_02_L=1))
+    segment(body, (-0.82, 1.36, 0.0), (-0.85, 1.35, 0.035), (0.026, 0.026), (0.024, 0.024),
+            W(Thumb_01_L=1), W(Thumb_02_L=1))
+    segment(body, (-0.85, 1.35, 0.035), (-0.89, 1.344, 0.065), (0.024, 0.024), (0.018, 0.018),
+            W(Thumb_02_L=1), W(Thumb_03_L=1))
+
+    # Left leg: hip to ankle, six sides. A step in the radius at the hem gives the shorts an edge.
+    loft(body, [
+        ((-0.09, 0.92, -0.02), 0.085, 0.09, W(Hips=0.5, UpperLeg_L=0.5)),
+        ((-0.1, 0.8, -0.015), 0.09, 0.094, W(UpperLeg_L=1)),
+        ((-0.103, 0.72, -0.01), 0.09, 0.092, W(UpperLeg_L=1)),
+        ((-0.104, 0.715, -0.01), 0.072, 0.076, W(UpperLeg_L=1)),
+        ((-0.107, 0.58, -0.01), 0.063, 0.068, W(UpperLeg_L=1)),
+        ((-0.11, 0.46, -0.005), 0.052, 0.056, W(UpperLeg_L=0.5, LowerLeg_L=0.5)),
+        ((-0.11, 0.36, -0.02), 0.056, 0.062, W(LowerLeg_L=1)),
+        ((-0.11, 0.2, -0.025), 0.042, 0.045, W(LowerLeg_L=1)),
+        ((-0.11, 0.09, -0.03), 0.035, 0.038, W(LowerLeg_L=0.5, Ankle_L=0.5)),
+    ], 6, (0, -1, 0), block=lambda c: "shorts" if c[1] >= HEM else "skin")
+
+    # Left foot: a wedge from heel to ball, then the toes.
+    x = -0.11
+    block_hex(body, [(x - 0.04, 0, -0.07), (x + 0.04, 0, -0.07), (x + 0.048, 0, 0.09), (x - 0.048, 0, 0.09),
+                     (x - 0.036, 0.1, -0.06), (x + 0.036, 0.1, -0.06), (x + 0.044, 0.05, 0.09),
+                     (x - 0.044, 0.05, 0.09)], W(Ankle_L=1))
+    block_hex(body, [(x - 0.048, 0, 0.09), (x + 0.048, 0, 0.09), (x + 0.044, 0, 0.15), (x - 0.044, 0, 0.15),
+                     (x - 0.044, 0.05, 0.09), (x + 0.044, 0.05, 0.09), (x + 0.04, 0.03, 0.15),
+                     (x - 0.04, 0.03, 0.15)], W(Ball_L=1))
+
+    body.mirrored()
+    return body
+
+
+def build_mesh(body, bones):
+    """One skinned mesh. Every triangle keeps its own three corners so the faces shade flat."""
+    n = len(body.tris) * 3
+    pos, nrm, uv = np.zeros((n, 3)), np.zeros((n, 3)), np.zeros((n, 2))
+    weights = np.zeros((n, len(bones)))
+    for t, ((a, b, c), ws, block) in enumerate(body.tris):
+        f = np.cross(b - a, c - a)
+        f /= np.linalg.norm(f)
+        for k, (p, w) in enumerate(zip((a, b, c), ws)):
+            i = t * 3 + k
+            pos[i], nrm[i], uv[i] = p, f, BLOCK_UV[block]
+            for bone, value in w.items():
+                weights[i, bones.index(bone)] = value
+    top = np.argsort(-weights, axis=1)[:, :4]
+    tw = np.take_along_axis(weights, top, axis=1)
     tw = tw / tw.sum(axis=1, keepdims=True)
-    return {"pos": m["pos"][vi], "nrm": np.array([v[1] for v in verts]), "uv": np.array([v[2] for v in verts]),
-            "bi": top.astype(np.uint16), "bw": tw.astype(np.float32), "idx": np.array(tris, np.int64).ravel(), "tex": 0}
+    return {"pos": pos, "nrm": nrm, "uv": uv, "bi": top.astype(np.uint16), "bw": tw.astype(np.float32),
+            "idx": np.arange(n, dtype=np.int64), "tex": 0}
 
 # endregion
 
@@ -201,8 +348,8 @@ def about(p, r):
     return mat4(t=p) @ mat4(r) @ mat4(t=-np.asarray(p))
 
 class Rig:
-    def __init__(self, m):
-        self.rest, self.parent, self.bones = m["rest"], m["parent"], m["bones"]
+    def __init__(self):
+        self.bones, self.parent, self.rest = skeleton()
 
     def pose(self, p):
         """Model-space transform of every joint. Rotations are about the joint's rest position, in model axes."""
@@ -285,7 +432,7 @@ def side(s, **bones):
     return {b + "_" + s: (x, y * flip, z * flip) for b, (x, y, z) in bones.items()}
 
 
-FINGERS = ["IndexFinger_01", "IndexFinger_02", "IndexFinger_03", "Finger_01", "Finger_02", "Finger_03"]
+FINGERS = ["Finger_01", "Finger_02"]
 
 
 def fist(s, curl=80):
@@ -517,10 +664,9 @@ def slot_table(rig, parts):
     return [(sid, name, poses if 8 <= sid <= 10 else lifted(rig, parts, poses), loop, ret) for sid, name, poses, loop, ret in clips]
 
 
-def build(fbx, out):
-    m = load(fbx)
-    rig = Rig(m)
-    mesh = build_mesh(m)
+def build(out):
+    rig = Rig()
+    mesh = build_mesh(make_body(), rig.bones)
     slots = slot_table(rig, [mesh])
     poses, table, start = [], [], 0
     for sid, name, frames, loop, ret in slots:
@@ -548,7 +694,7 @@ def build(fbx, out):
         "format": 1,
         "kind": "unit",
         "unitName": UNIT_NAME,
-        "baker": "make_polygon_guy.py (hand-written example, not TJBake)",
+        "baker": "make_dude_bro.py (hand-written example, not TJBake)",
         "skeleton": {"boneCount": len(rig.bones), "names": rig.bones},
         "frameRate": FPS,
         "slots": table,
@@ -692,11 +838,11 @@ def contact_sheet(rig, mesh, texs, table, poses, path):
 
 def main():
     args = sys.argv[1:]
-    if len(args) < 2:
+    if not args or args[0].startswith("--"):
         print(__doc__)
         sys.exit(1)
-    fbx, out = args[:2]
-    rig, mesh, poses, table = build(fbx, out)
+    out = args[0]
+    rig, mesh, poses, table = build(out)
     texs = textures()
     render_icon(rig, mesh, texs, os.path.join(out, "icon.png"))
     first = {s["id"]: s["start"] for s in table}

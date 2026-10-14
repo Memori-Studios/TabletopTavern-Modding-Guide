@@ -727,7 +727,7 @@ and [`docs/unit-visual-contract.md`](docs/unit-visual-contract.md).
 ### Example: Dude Bro
 
 [`ExampleUnitMod/`](ExampleUnitMod/) is a complete unit model mod you can copy. It turns Levy Swordsmen into "Dude
-Bros", bare-knuckle brawlers built from Synty Studios' POLYGON Guy (used with permission), with three looks, 13
+Bros", bare-knuckle brawlers with a low-poly body built entirely in code (no model file), with three looks, 13
 animations, a new card icon and a new name. Its README walks through repainting it, renaming it and making your own,
 and its `source/` folder has the script that built it and a checker you can run on your own unit folder.
 
