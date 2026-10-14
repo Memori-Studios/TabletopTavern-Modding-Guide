@@ -1,0 +1,267 @@
+{
+  "format": 1,
+  "kind": "unit",
+  "unitName": "LevySwordsmen",
+  "baker": "make_polygon_guy.py (hand-written example, not TJBake)",
+  "skeleton": {
+    "boneCount": 49,
+    "names": [
+      "Root",
+      "Hips",
+      "Spine_01",
+      "Spine_02",
+      "Spine_03",
+      "Neck",
+      "Head",
+      "Eyes",
+      "Eyebrows",
+      "Clavicle_L",
+      "Shoulder_L",
+      "Elbow_L",
+      "Hand_L",
+      "Thumb_01_L",
+      "Thumb_02_L",
+      "Thumb_03_L",
+      "IndexFinger_01_L",
+      "IndexFinger_02_L",
+      "IndexFinger_03_L",
+      "IndexFinger_04_L",
+      "Finger_01_L",
+      "Finger_02_L",
+      "Finger_03_L",
+      "Finger_04_L",
+      "Clavicle_R",
+      "Shoulder_R",
+      "Elbow_R",
+      "Hand_R",
+      "Thumb_01_R",
+      "Thumb_02_R",
+      "Thumb_03_R",
+      "IndexFinger_01_R",
+      "IndexFinger_02_R",
+      "IndexFinger_03_R",
+      "IndexFinger_04_R",
+      "Finger_01_R",
+      "Finger_02_R",
+      "Finger_03_R",
+      "Finger_04_R",
+      "UpperLeg_R",
+      "LowerLeg_R",
+      "Ankle_R",
+      "Ball_R",
+      "Toes_R",
+      "UpperLeg_L",
+      "LowerLeg_L",
+      "Ankle_L",
+      "Ball_L",
+      "Toes_L"
+    ]
+  },
+  "frameRate": 30,
+  "slots": [
+    {
+      "id": 0,
+      "name": "idle",
+      "start": 0,
+      "count": 60,
+      "loop": true,
+      "returnToIdle": false,
+      "returnAt": 0.9
+    },
+    {
+      "id": 1,
+      "name": "walk",
+      "start": 60,
+      "count": 32,
+      "loop": true,
+      "returnToIdle": false,
+      "returnAt": 0.9
+    },
+    {
+      "id": 2,
+      "name": "run",
+      "start": 92,
+      "count": 20,
+      "loop": true,
+      "returnToIdle": false,
+      "returnAt": 0.9
+    },
+    {
+      "id": 3,
+      "name": "meleeStance",
+      "start": 112,
+      "count": 40,
+      "loop": true,
+      "returnToIdle": false,
+      "returnAt": 0.9
+    },
+    {
+      "id": 4,
+      "name": "meleeAttack",
+      "start": 152,
+      "count": 33,
+      "loop": false,
+      "returnToIdle": true,
+      "returnAt": 0.9
+    },
+    {
+      "id": 5,
+      "name": "idleVariant1",
+      "start": 185,
+      "count": 75,
+      "loop": false,
+      "returnToIdle": true,
+      "returnAt": 0.9
+    },
+    {
+      "id": 6,
+      "name": "idleVariant2",
+      "start": 260,
+      "count": 69,
+      "loop": false,
+      "returnToIdle": true,
+      "returnAt": 0.9
+    },
+    {
+      "id": 7,
+      "name": "idleVariant3",
+      "start": 329,
+      "count": 63,
+      "loop": false,
+      "returnToIdle": true,
+      "returnAt": 0.9
+    },
+    {
+      "id": 8,
+      "name": "death1",
+      "start": 392,
+      "count": 50,
+      "loop": false,
+      "returnToIdle": false,
+      "returnAt": 0.9
+    },
+    {
+      "id": 9,
+      "name": "death2",
+      "start": 442,
+      "count": 50,
+      "loop": false,
+      "returnToIdle": false,
+      "returnAt": 0.9
+    },
+    {
+      "id": 10,
+      "name": "death3",
+      "start": 492,
+      "count": 55,
+      "loop": false,
+      "returnToIdle": false,
+      "returnAt": 0.9
+    },
+    {
+      "id": 11,
+      "name": "thrown",
+      "start": 547,
+      "count": 47,
+      "loop": false,
+      "returnToIdle": true,
+      "returnAt": 0.9
+    },
+    {
+      "id": 12,
+      "name": "meleeAttackAlt",
+      "start": 594,
+      "count": 31,
+      "loop": false,
+      "returnToIdle": true,
+      "returnAt": 0.9
+    }
+  ],
+  "anchors": [],
+  "materials": [
+    {
+      "name": "palette_brown_beard",
+      "baseColor": "palette_brown_beard.png",
+      "normal": "",
+      "emission": "",
+      "tint": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "smoothness": 0.1,
+      "transparent": false
+    },
+    {
+      "name": "palette_clean_shaven",
+      "baseColor": "palette_clean_shaven.png",
+      "normal": "",
+      "emission": "",
+      "tint": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "smoothness": 0.1,
+      "transparent": false
+    },
+    {
+      "name": "palette_black_beard",
+      "baseColor": "palette_black_beard.png",
+      "normal": "",
+      "emission": "",
+      "tint": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "smoothness": 0.1,
+      "transparent": false
+    }
+  ],
+  "lodSwitch": [],
+  "variants": [
+    {
+      "lods": [
+        {
+          "meshes": [
+            {
+              "file": "body.mesh.bin",
+              "material": 0
+            }
+          ]
+        }
+      ],
+      "attachments": []
+    },
+    {
+      "lods": [
+        {
+          "meshes": [
+            {
+              "file": "body.mesh.bin",
+              "material": 1
+            }
+          ]
+        }
+      ],
+      "attachments": []
+    },
+    {
+      "lods": [
+        {
+          "meshes": [
+            {
+              "file": "body.mesh.bin",
+              "material": 2
+            }
+          ]
+        }
+      ],
+      "attachments": []
+    }
+  ]
+}
