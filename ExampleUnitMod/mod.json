@@ -2,6 +2,6 @@
     "displayName": "Example Mod - Dude Bro",
     "author": "Memori Studios",
     "version": "1.0.0",
-    "description": "An example unit reskin. Levy Swordsmen become Dude Bros: bare-knuckle brawlers with a new name, three looks, a jab and cross, and a front kick. Stats and behaviour do not change. Model: POLYGON Guy by Synty Studios, used with permission. Read README.md inside the mod folder to learn how to reskin a unit yourself.",
+    "description": "An example unit reskin. Levy Swordsmen become Dude Bros: bare-knuckle brawlers with a new name, three looks, a jab and cross, and a front kick. Stats and behaviour do not change. The model is built in code and free to reuse (CC0). Read README.md inside the mod folder to learn how to reskin a unit yourself.",
     "workshopFileId": ""
 }
