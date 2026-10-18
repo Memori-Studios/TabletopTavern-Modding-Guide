@@ -255,7 +255,7 @@ Mods/
 
 如果某件装备的效果是直接解锁某项功能而非数值加成（例如钻锋箭矢赋予 [破甲] 能力、铁库的利息翻倍），则没有有意义的数值可供修改——覆盖这类装备不会产生任何效果，因为没有地方会读取这个值。`gearID` 必须是以下之一：
 
-`ArmingSwords`, `BucklerShields`, `Longbows`, `Glaives`, `ConscriptionOrders`, `TexanBBQ`, `JoustingLances`, `GnomishArmorers`, `DiamondTippedArrows`, `WellHonedAxes`, `RingoftheElvenKing`, `RavensEye`, `BallisticCharts`, `Turkey`, `HeavyWeapons`, `Shungite`, `QuantitativeEasingPolicy`, `TowerShields`, `IronBank`, `OmenofFamine`, `OrnateRing`, `ThePotato`, `Cauldron`, `DwarvenTaxCollectors`, `CommonBuilder`, `UncommonBuilder`, `RareBuilder`, `PrivateeringPapers`, `CookieAndFowlCard`, `BraceletoftheSunGoddess`, `BearSpray`, `LuckyHorseshoe`, `RiverTrout`, `MichaelsSecretStuff`, `Mitre`, `ChugJug`, `PumpkinPie`, `AuraFarming`, `NorthernLooters`, `JailersKey`
+`ArmingSwords`, `BucklerShields`, `Longbows`, `Glaives`, `ConscriptionOrders`, `TexanBBQ`, `JoustingLances`, `GnomishArmorers`, `DiamondTippedArrows`, `WellHonedAxes`, `RingoftheElvenKing`, `RavensEye`, `BallisticCharts`, `Turkey`, `HeavyWeapons`, `Shungite`, `WarDrums`, `TowerShields`, `IronBank`, `OmenofFamine`, `OrnateRing`, `ThePotato`, `Cauldron`, `DwarvenTaxCollectors`, `CommonBuilder`, `UncommonBuilder`, `RareBuilder`, `PrivateeringPapers`, `CookieAndFowlCard`, `BraceletoftheSunGoddess`, `BearSpray`, `LuckyHorseshoe`, `RiverTrout`, `MichaelsSecretStuff`, `Mitre`, `ChugJug`, `PumpkinPie`, `AuraFarming`, `NorthernLooters`, `JailersKey`
 
 通过这种方式只能覆盖数值——装备的名称、稀有度以及是否在商店中禁用无法通过此文件更改。
 
