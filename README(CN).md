@@ -99,6 +99,7 @@ Mods/
 | `explosionForce` | float | 仅 `Artillery`。爆炸把命中的模型抛飞的力度，越高抛得越远。 |
 | `none`, `standardShields`, `armorPiercing`, `antiInfantry`, `antiLarge`, `terrifying`, `stalwart`, `outrider`, `swampCreature`, `forestDweller`, `chickenFlight`, `ethereal`, `bloodFrenzy`, `rage`, `emblazing`, `unstoppable`, `heavyShields`, `throwingAxes`, `armorSundering`, `monsterSlayer`, `forgefuryTempering`, `flamingAmmo`, `dragonsHoard`, `backStabbers`, `thickScales` | bool | 填写 `"true"` 或 `"false"` |
 | `shotDiscipline`, `overdraw`, `steadyAim`, `demolisher`, `powderReserves`, `deepQuivers` | bool | 远程特性——`shotDiscipline`（装填速度提升 20%）和 `overdraw`（射程 +15%）需要能够射击的单位；`steadyAim`（免除自由射击模式的命中率惩罚）对 `Ranged` 与 `Hybrid` 生效，但对 `Artillery` 无效，因为炮兵没有可切换的射击模式；`demolisher`（爆炸伤害与范围 +30%）和 `powderReserves`（弹药 +50%）仅对 `Artillery` 生效；`deepQuivers`（弹药 +500）仅对 `Ranged` 生效，对 `Hybrid` 无效，因为它们的弹药只是少量投掷武器 |
+| `uninvitedGuests`, `restlessDead`, `earnTheirFreedom`, `masterlessBlade`, `slowGrowth`, `returnToTheGrove`, `prospectors`, `regeneration`, `noblePurse`, `garrisonDuty`, `feast`, `scavengers`, `graveRobbers`, `cryptKeepers`, `luckyCharm` | bool | 战役特性。仅在战役中对你自己的军队生效（无尽模式 March 除外）。写 `"false"` 可移除单位自带的特性。`earnTheirFreedom` 总会把该部队变为 Huskarls。 |
 
 ### 单位名称参考
 
@@ -220,7 +221,7 @@ Mods/
 
 ### `attributeRules` 条目字段
 
-与 `statRules` 相同，区别在于没有 `stat`/`magnitudeKind`/`value`字段，取而代之的是一个单独的`grantedAttribute` (enum)——英雄会将此属性赋予符合条件的单位（若该单位尚未拥有此属性）。有效值：`StandardShields`, `ArmorPiercing`, `AntiInfantry`, `AntiLarge`, `Terrifying`, `Stalwart`, `Outrider`, `SwampCreature`, `ForestDweller`, `ChickenFlight`, `Ethereal`, `BloodFrenzy`, `Rage`, `Emblazing`, `Unstoppable`, `HeavyShields`, `ThrowingAxes`, `ArmorSundering`, `MonsterSlayer`, `ForgefuryTempering`, `FlamingAmmo`, `DragonsHoard`, `BackStabbers`, `ThickScales`, `BloodDrinker`.
+与 `statRules` 相同，区别在于没有 `stat`/`magnitudeKind`/`value`字段，取而代之的是一个单独的`grantedAttribute` (enum)——英雄会将此属性赋予符合条件的单位（若该单位尚未拥有此属性）。有效值：`StandardShields`, `ArmorPiercing`, `AntiInfantry`, `AntiLarge`, `Terrifying`, `Stalwart`, `Outrider`, `SwampCreature`, `ForestDweller`, `ChickenFlight`, `Ethereal`, `BloodFrenzy`, `Rage`, `Emblazing`, `Unstoppable`, `HeavyShields`, `ThrowingAxes`, `ArmorSundering`, `MonsterSlayer`, `ForgefuryTempering`, `FlamingAmmo`, `DragonsHoard`, `BackStabbers`, `ThickScales`, `BloodDrinker`，以及战役特性 `UninvitedGuests`, `RestlessDead`, `EarnTheirFreedom`, `MasterlessBlade`, `SlowGrowth`, `ReturnToTheGrove`, `Prospectors`, `Regeneration`, `NoblePurse`, `GarrisonDuty`, `Feast`, `Scavengers`, `GraveRobbers`, `CryptKeepers`, `LuckyCharm`。
 
 ### `factionRules` 条目字段
 

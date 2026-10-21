@@ -99,6 +99,7 @@ Available fields:
 | `explosionForce` | float | `Artillery` only. How hard the blast throws the models it catches. Higher values send them further. |
 | `none`, `standardShields`, `armorPiercing`, `antiInfantry`, `antiLarge`, `terrifying`, `stalwart`, `outrider`, `swampCreature`, `forestDweller`, `chickenFlight`, `ethereal`, `bloodFrenzy`, `rage`, `emblazing`, `unstoppable`, `heavyShields`, `throwingAxes`, `armorSundering`, `monsterSlayer`, `forgefuryTempering`, `flamingAmmo`, `dragonsHoard`, `backStabbers`, `thickScales` | bool | write `"true"` or `"false"` |
 | `shotDiscipline`, `overdraw`, `steadyAim`, `demolisher`, `powderReserves`, `deepQuivers` | bool | shooter traits - `shotDiscipline` (20% faster reload) and `overdraw` (+15% range) need a unit that shoots; `steadyAim` (no Fire-at-Will accuracy penalty) does something on `Ranged` and `Hybrid`, but not `Artillery`, which has no fire mode to switch; `demolisher` (+30% explosion damage and radius) and `powderReserves` (+50% ammunition) only do anything on `Artillery`; `deepQuivers` (+500 ammunition) only does anything on `Ranged` - it is ignored on `Hybrid`, whose ammo pool is a token handful of throwing weapons |
+| `uninvitedGuests`, `restlessDead`, `earnTheirFreedom`, `masterlessBlade`, `slowGrowth`, `returnToTheGrove`, `prospectors`, `regeneration`, `noblePurse`, `garrisonDuty`, `feast`, `scavengers`, `graveRobbers`, `cryptKeepers`, `luckyCharm` | bool | Campaign Traits. They only work in a campaign run (not the March) and only for your own army. Write `"false"` to take one away from a unit that has it. `earnTheirFreedom` always turns the squad into Huskarls. |
 
 ### Unit name reference
 
@@ -232,7 +233,7 @@ This is the most powerful and most complex file. It replaces the numeric bonuses
 
 ### `attributeRules` entry fields
 
-Same as `statRules` except instead of `stat`/`magnitudeKind`/`value`, there's a single `grantedAttribute` (enum) — the hero grants this attribute to matching units if they don't already have it. Valid values: `StandardShields`, `ArmorPiercing`, `AntiInfantry`, `AntiLarge`, `Terrifying`, `Stalwart`, `Outrider`, `SwampCreature`, `ForestDweller`, `ChickenFlight`, `Ethereal`, `BloodFrenzy`, `Rage`, `Emblazing`, `Unstoppable`, `HeavyShields`, `ThrowingAxes`, `ArmorSundering`, `MonsterSlayer`, `ForgefuryTempering`, `FlamingAmmo`, `DragonsHoard`, `BackStabbers`, `ThickScales`, `BloodDrinker`.
+Same as `statRules` except instead of `stat`/`magnitudeKind`/`value`, there's a single `grantedAttribute` (enum) — the hero grants this attribute to matching units if they don't already have it. Valid values: `StandardShields`, `ArmorPiercing`, `AntiInfantry`, `AntiLarge`, `Terrifying`, `Stalwart`, `Outrider`, `SwampCreature`, `ForestDweller`, `ChickenFlight`, `Ethereal`, `BloodFrenzy`, `Rage`, `Emblazing`, `Unstoppable`, `HeavyShields`, `ThrowingAxes`, `ArmorSundering`, `MonsterSlayer`, `ForgefuryTempering`, `FlamingAmmo`, `DragonsHoard`, `BackStabbers`, `ThickScales`, `BloodDrinker`, and the Campaign Traits `UninvitedGuests`, `RestlessDead`, `EarnTheirFreedom`, `MasterlessBlade`, `SlowGrowth`, `ReturnToTheGrove`, `Prospectors`, `Regeneration`, `NoblePurse`, `GarrisonDuty`, `Feast`, `Scavengers`, `GraveRobbers`, `CryptKeepers`, `LuckyCharm`.
 
 ### `factionRules` entry fields
 
