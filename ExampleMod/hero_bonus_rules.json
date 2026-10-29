@@ -32,8 +32,8 @@
 
         { "heroID": "11", "localizationKey": "heroBonusTitle21", "condition": { "filterKind": "Unconditional" }, "stat": "MeleeAttack", "magnitudeKind": "Flat", "value": "4" },
 
-        { "heroID": "12", "localizationKey": "heroBonusTitle24", "condition": { "filterKind": "UnitName", "unitNames": ["EmperorsArquebusiers"] }, "stat": "Accuracy", "magnitudeKind": "Flat", "value": "10" },
-        { "heroID": "12", "localizationKey": "heroBonusTitle24", "condition": { "filterKind": "UnitName", "unitNames": ["EmperorsArquebusiers"] }, "stat": "MissileStrength", "magnitudeKind": "Flat", "value": "4" },
+        { "heroID": "12", "localizationKey": "heroBonusTitle24", "condition": { "filterKind": "UnitName", "unitNames": ["EmperorsArquebusiers"] }, "stat": "Accuracy", "magnitudeKind": "Flat", "value": "5" },
+        { "heroID": "12", "localizationKey": "heroBonusTitle24", "condition": { "filterKind": "UnitName", "unitNames": ["EmperorsArquebusiers"] }, "stat": "MissileStrength", "magnitudeKind": "Flat", "value": "2" },
 
         { "heroID": "13", "localizationKey": "heroBonusTitle25", "condition": { "filterKind": "EnemyRace", "requiredEnemyRace": "Gruntkin" }, "stat": "MeleeAttack", "magnitudeKind": "Flat", "value": "10" },
         { "heroID": "13", "localizationKey": "heroBonusTitle25", "condition": { "filterKind": "EnemyRace", "requiredEnemyRace": "Gruntkin" }, "stat": "WeaponStrength", "magnitudeKind": "Flat", "value": "4" },
