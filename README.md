@@ -703,7 +703,7 @@ Mods/
                 anchors.bin
                 body_0.mesh.bin
                 ...
-                icon.png          <- optional, 256x256, replaces the unit's card icon
+                icon.png          <- optional, 512x768, replaces the unit's card icon
                 rider/            <- optional, a new rider for a mounted unit
 ```
 

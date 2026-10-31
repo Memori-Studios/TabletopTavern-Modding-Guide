@@ -51,7 +51,7 @@ ExampleUnitMod/
             palette_brown_beard.png one colour palette per variant (look)
             palette_clean_shaven.png
             palette_black_beard.png
-            icon.png                the unit card picture, 256 x 256
+            icon.png                the unit card picture, 512 x 768
     source/
         make_dude_bro.py            the script that builds everything in unit_visuals (optional)
         check_unit_visual.py        a checker you can run on your own unit folder
@@ -190,8 +190,9 @@ Optional extras:
 
 ### Step 5: Add an icon
 
-Put a 256 x 256 PNG named `icon.png` in the unit folder. It replaces the unit's picture on every card. A transparent
-background looks best. Without it, the unit keeps its normal icon.
+Put a 512 x 768 PNG named `icon.png` in the unit folder, the same size as the game's own unit pictures. It replaces
+the unit's picture on every card. A transparent background looks best. Without it, the unit keeps its normal icon.
+An older 256 x 256 icon still loads, but it shows smaller on the cards.
 
 ### Step 6: Add mod.json
 

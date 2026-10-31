@@ -220,6 +220,7 @@ def check_png(folder, name, exact=None):
         raise Problem(f"{name} is larger than 4096 on a side")
     if exact and (w, h) != exact:
         raise Problem(f"{name} is {w}x{h}, it must be {exact[0]}x{exact[1]}")
+    return w, h
 
 
 def check_folder(folder, shoots, swaps, is_rider=False):
@@ -267,7 +268,11 @@ def check_folder(folder, shoots, swaps, is_rider=False):
             raise Problem("the game's unit swaps bow for sword, so every variant needs a 'bow' and a 'sword'" if swaps
                           else "the game's unit has no bow and sword pair, so no variant may have both")
     if not is_rider and os.path.isfile(os.path.join(folder, "icon.png")):
-        check_png(folder, "icon.png", (256, 256))
+        w, h = check_png(folder, "icon.png")
+        if (w, h) == (256, 256):
+            print("Note: icon.png is 256x256. The game still loads it, but cards are laid out for 512x768, so it shows smaller.")
+        elif (w, h) != (512, 768):
+            raise Problem(f"icon.png is {w}x{h}, it must be 512x768")
     if not is_rider and j.get("rider"):
         check_folder(os.path.join(folder, j["rider"]), False, False, is_rider=True)
     return j, frames

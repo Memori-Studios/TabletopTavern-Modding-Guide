@@ -805,7 +805,7 @@ def to_image(img, scale):
 
 def render_icon(rig, mesh, texs, path):
     pose = P(GUARD, Head=(-10, -5, 0))
-    img = render(scene_tris(rig, mesh, pose), texs, eye=(-0.9, 1.75, 2.6), target=(0, 1.35, 0), size=(512, 512), fov=26,
+    img = render(scene_tris(rig, mesh, pose), texs, eye=(-0.9, 1.75, 2.6), target=(0, 1.25, 0), size=(1024, 1536), fov=28,
                  bg=(0, 0, 0, 0))
     to_image(img, 2).save(path)
 

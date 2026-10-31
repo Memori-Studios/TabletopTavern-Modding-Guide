@@ -656,7 +656,7 @@ Mods/
                 anchors.bin
                 body_0.mesh.bin
                 ...
-                icon.png          <- 可选，256x256，替换单位的卡牌图标
+                icon.png          <- 可选，512x768，替换单位的卡牌图标
                 rider/            <- 可选，为骑乘单位提供新的骑手
 ```
 

@@ -203,7 +203,7 @@ What the game writes or reads on this tree:
 - Built-in variant 0 (and the built-in rider) still load for a modded unit: they decide the bow and sword rule and
   are the fallback. On a refusal all three variant slots use built-in variant 0.
 - The recruit screen, the Prestige picker and the Collection codex show the same files through the TJBake preview
-  player, placed with the built-in recruit prefab's root position, turn and scale. `icon.png` (256x256) replaces the
+  player, placed with the built-in recruit prefab's root position, turn and scale. `icon.png` (512x768) replaces the
   unit's card icon everywhere it is drawn.
 
 ## 12. Source files behind each rule
