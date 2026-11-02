@@ -75,7 +75,7 @@ Mods/
 | `heroID` | int | 可选。设置后，该条目仅在使用该英雄的战役进行中生效，否则被跳过。由于游戏只有一张属性表，它会同时改变**双方军队**的这个单位：给一个敌方单位设置英雄限定的 `unitSize`，敌军也会以该规模上场。用它可以让 `unitType`、`unitSize`、`rarityTier`、`race` 或任何其他字段随英雄变化。属性表在指挥官界面选择英雄、载入战役以及返回主菜单时重建，因此自定义战斗使用原版单位。带 `heroID` 的条目与其他条目一样按文件顺序应用。 |
 | `unitType` | enum | 近战`Melee`, 远程`Ranged`, 混合`Hybrid`, 炮兵`Artillery`, 建筑`Structure`。`Hybrid` 单位既能射击也能顶在近战线上：它们部署在前排，不会风筝走位，获得近战声望加成与近战装备，在自动结算战斗中使用近战数据作战，但仍然携带弓或投掷武器进行远程攻击。它们不会获得任何弹药加成，因此请给它们较小的 `ammunition` 数值。原版的混合单位为 `Berserkers`、`Cragflayers` 和 `KunoichiInfiltrators`。 |
 | `unitSize` | enum | 步兵`Infantry`, 骑兵`Cavalry`, 巨兽`Monstrous`, 单个单位`SingleUnit`, 炮兵`Artillery` |
-| `rarityTier` | enum | 普通`Common`, 罕见`Uncommon`, 稀有`Rare`, 传说`Legendary` |
+| `rarityTier` | enum | 普通`Common`, 罕见`Uncommon`, 稀有`Rare`, 传说`Legendary`。传说`Legendary`单位只能作为英雄的专属单位招募：专属单位包和羊肉酱汁给出的是英雄的 `signatureUnit`，其他卡包、城镇和战斗奖励都不会提供传说单位。要让你的传说单位可以招募，请在 `hero_overrides.json` 中把它设为某个英雄的 `signatureUnit`。敌军仍可能派出它：每一幕的最终战斗会抽取一支传说小队。 |
 | `race` | enum | `IronLegion`, `Gruntkin`, `RavenHost`, `TaelindorForest`, `SanguineCourt`, `SakuraDynasty`, `DeepstoneHold`, `DrakosaurBrood`, `Special` - 将该单位移至该派系的收藏/军表中。不会改变单位的模型、图标或肖像，这些都会保持其原本的样子。 |
 | `meleeAttack` | int | 近战技巧。每次挥砍的命中率为 `35 + (攻击方 meleeAttack - 防御方 meleeDefense) x 2` 百分比，限制在 10-90 之间。 |
 | `meleeDefense` | int | 同一公式中的防御方数值。被侧翼攻击时，该数值按一半计算。 |
