@@ -717,7 +717,8 @@ Rules the game checks:
   keeps the unit fighting the way it always has.
 - **Riders.** A mounted unit can bring a new rider in `rider/`, or keep the game's rider. Either way the mount needs a
   `saddle` prop. A unit with no rider in the game cannot gain one.
-- **One to three variants.** Squads mix the variants you supply, repeating them when there are fewer than three.
+- **One to three variants.** Squads mix the variants you supply, repeating them when there are fewer than three. A
+  new rider can have its own variants too: they pair up with the mount's, each list repeating when it runs out.
 
 When anything is wrong, the game logs one error naming the folder, the file and the rule, and the unit keeps its
 normal model. Most problems are reported when the game starts. The bow and sword rule is checked when a battle loads.

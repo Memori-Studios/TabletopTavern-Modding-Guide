@@ -79,7 +79,7 @@ relative to the folder, no subfolders except `rider/`.
 | `anchors[]` | string[] | Names, unique, in `anchors.bin` order. May be empty. |
 | `materials[]` | array | At least one. Texture file names must exist in the folder. `tint` is linear RGBA. `emissionColor` (optional, default white) is the HDR colour the emission map is multiplied by. |
 | `lodSwitch[]` | float[] | 0 to 2 entries, descending, each in (0, 1): the screen-height fraction below which the next LOD shows. Length equals LOD count minus 1 on every variant. |
-| `variants[]` | array | 1 to 3. Every variant has the same LOD count. |
+| `variants[]` | array | 1 to 3. Every variant has the same LOD count. A rider's variants pair with the mount's: a squad's models cycle through both lists side by side, each repeating when it runs out (2 mounts and 3 riders give mount 1 + rider 1, mount 2 + rider 2, mount 1 + rider 3). |
 | `variants[].lods[].meshes[]` | array | At least one mesh per LOD. `material` indexes `materials`. |
 | `variants[].attachments[]` | array | `anchor` must be in `anchors`, `role` is one of `prop`, `bow`, `sword`, `shield`, `saddle`, `lods` lists the LOD indices that show it (default `[0, 1]`). `tag` (optional) is free text for the host game; TJBake only carries it. |
 | `rider` | string | Optional, always `"rider/"`. |

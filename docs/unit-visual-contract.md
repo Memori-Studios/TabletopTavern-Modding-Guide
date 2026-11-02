@@ -170,7 +170,8 @@ What the game writes or reads on this tree:
 - **Rider:** optional, only for a `UnitSize.Cavalry` unit that has a rider today (12 units, hardcoded in
   `UnitSetUpSystem`). A reskin may ship its own rider or keep the built-in one by leaving `rider` out. A unit with no
   built-in rider may not ship one. A rider visual
-  has the 3-slot table, its own anchors and attachments, and no LODs (riders are small).
+  has the 3-slot table, its own anchors and attachments, and no LODs (riders are small). It may have 1 to 3 variants,
+  which pair with the mount's: each model slot takes mount and rider variant by `index % count`, each list its own count.
 
 ## 9. Materials and shader
 
