@@ -45,8 +45,8 @@
         { "heroID": "15", "localizationKey": "heroBonusTitle29", "condition": { "filterKind": "UnitName", "unitNames": ["KoboldBrawlers", "ScalebowKobolds"] }, "stat": "Leadership", "magnitudeKind": "Flat", "value": "10" },
         { "heroID": "15", "localizationKey": "heroBonusTitle29", "condition": { "filterKind": "UnitName", "unitNames": ["KoboldBrawlers", "ScalebowKobolds"] }, "stat": "MeleeAttack", "magnitudeKind": "Flat", "value": "4" },
 
-        { "heroID": "16", "localizationKey": "heroBonusTitle31", "condition": { "filterKind": "UnitSize", "unitSizes": ["Cavalry", "Monstrous", "SingleUnit", "Artillery"] }, "stat": "Leadership", "magnitudeKind": "Flat", "value": "10" },
-        { "heroID": "16", "localizationKey": "heroBonusTitle31", "condition": { "filterKind": "UnitSize", "unitSizes": ["Cavalry", "Monstrous", "SingleUnit", "Artillery"] }, "stat": "MeleeDefense", "magnitudeKind": "Flat", "value": "4" },
+        { "heroID": "16", "localizationKey": "heroBonusTitle31", "condition": { "filterKind": "UnitSize", "unitSizes": ["Cavalry", "Monstrous", "SingleUnit"] }, "stat": "Leadership", "magnitudeKind": "Flat", "value": "10" },
+        { "heroID": "16", "localizationKey": "heroBonusTitle31", "condition": { "filterKind": "UnitSize", "unitSizes": ["Cavalry", "Monstrous", "SingleUnit"] }, "stat": "MeleeDefense", "magnitudeKind": "Flat", "value": "4" },
         { "heroID": "16", "localizationKey": "heroBonusTitle32", "condition": { "filterKind": "UnitName", "unitNames": ["StegoplateGuard"] }, "stat": "Armor", "magnitudeKind": "Flat", "value": "15" },
         { "heroID": "16", "localizationKey": "heroBonusTitle32", "condition": { "filterKind": "UnitName", "unitNames": ["StegoplateGuard"] }, "stat": "WeaponStrength", "magnitudeKind": "Flat", "value": "4" }
     ],
