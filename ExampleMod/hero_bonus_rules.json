@@ -16,7 +16,7 @@
         { "heroID": "4", "localizationKey": "heroBonusTitle7", "condition": { "filterKind": "UnitName", "unitNames": ["OrcRavagers"] }, "stat": "WeaponStrength", "magnitudeKind": "Flat", "value": "4" },
 
         { "heroID": "5", "localizationKey": "heroBonusTitle9", "condition": { "filterKind": "UnitTag", "tag": "MeleeInfantry" }, "stat": "MeleeDefense", "magnitudeKind": "Flat", "value": "4" },
-        { "heroID": "5", "localizationKey": "heroBonusTitle9", "condition": { "filterKind": "UnitTag", "tag": "MeleeInfantry" }, "stat": "Armor", "magnitudeKind": "Flat", "value": "10" },
+        { "heroID": "5", "localizationKey": "heroBonusTitle9", "condition": { "filterKind": "UnitTag", "tag": "MeleeInfantry" }, "stat": "Armor", "magnitudeKind": "Flat", "value": "6" },
 
         { "heroID": "6", "localizationKey": "heroBonusTitle11", "condition": { "filterKind": "UnitName", "unitNames": ["Shieldmaidens"] }, "stat": "MeleeDefense", "magnitudeKind": "Flat", "value": "4" },
         { "heroID": "6", "localizationKey": "heroBonusTitle11", "condition": { "filterKind": "UnitName", "unitNames": ["Shieldmaidens"] }, "stat": "Leadership", "magnitudeKind": "Flat", "value": "10" },
