@@ -1,0 +1,40 @@
+{
+    "events": [
+        {
+            "key": "LostCaravan",
+            "minAct": 1,
+            "maxAct": 0,
+            "races": [],
+            "heroes": [],
+            "weight": 1,
+            "choices": [
+                {
+                    "kind": "Roll",
+                    "rollNeeded": 9,
+                    "success":         [ { "type": "Gold", "value": 30 } ],
+                    "failure":         [ { "type": "UnitHealth", "value": -0.1 } ],
+                    "criticalSuccess": [ { "type": "Gold", "value": 30 }, { "type": "GearDrop" } ],
+                    "criticalFailure": [ { "type": "UnitHealth", "value": -0.2 } ]
+                },
+                {
+                    "kind": "Pay",
+                    "goldRequired": 15,
+                    "success": [ { "type": "NextBattleLeadership", "value": 10 } ]
+                },
+                {
+                    "kind": "Roll",
+                    "rollNeeded": 6,
+                    "requiredUnitTypes": [ "Ranged" ],
+                    "success":         [ { "type": "RevealMap" } ],
+                    "failure":         [ { "type": "None" } ],
+                    "criticalSuccess": [ { "type": "RevealMap" }, { "type": "NextBattleFixture", "fixture": "Watchtower" } ],
+                    "criticalFailure": [ { "type": "NextBattleEnemyLeadership", "value": 10 } ]
+                },
+                {
+                    "kind": "WalkAway",
+                    "success": [ { "type": "None" } ]
+                }
+            ]
+        }
+    ]
+}

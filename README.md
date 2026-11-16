@@ -1,6 +1,6 @@
 # Tabletop Tavern Modding Guide
 
-Tabletop Tavern supports mods that override unit stats, faction colors, hero data, hero/faction battle bonuses, gear effect magnitudes, shop/economy pricing, enemy army/garrison generation, race passive tuning, weather effects and odds, localized text and unit models. Everything except unit models is plain text files with no code required. This guide covers the file formats. See the [`ExampleMod/`](ExampleMod/) folder for a complete, working example you can copy and edit, and [`ExampleUnitMod/`](ExampleUnitMod/) for a unit model example.
+Tabletop Tavern supports mods that override unit stats, faction colors, hero data, hero/faction battle bonuses, gear effect magnitudes, shop/economy pricing, enemy army/garrison generation, race passive tuning, weather effects and odds, new map events, localized text and unit models. Everything except unit models is plain text files with no code required. This guide covers the file formats. See the [`ExampleMod/`](ExampleMod/) folder for a complete, working example you can copy and edit, and [`ExampleUnitMod/`](ExampleUnitMod/) for a unit model example.
 
 ## Where mods go
 
@@ -23,11 +23,12 @@ Mods/
         economy_overrides.json <- optional
         race_bonus_overrides.json <- optional
         weather_overrides.json <- optional
+        event_mods.json        <- optional, new map events (see below)
         localization_overrides.json <- optional
         unit_visuals/          <- optional, new unit models (see below)
 ```
 
-A folder needs `mod.json` to be recognized as a mod at all — the ten override files and the `unit_visuals` folder are each optional, include only the ones you need. Folder names starting with `_` (like `_Template`) are reserved and never loaded as mods.
+A folder needs `mod.json` to be recognized as a mod at all — the eleven override files and the `unit_visuals` folder are each optional, include only the ones you need. Folder names starting with `_` (like `_Template`) are reserved and never loaded as mods.
 
 New mods are enabled automatically the first time the game finds them. Use the in-game **Mods** menu (from the main menu) to enable/disable mods and reorder them — when more than one mod changes the same thing, the one lower in the list wins. **Changes apply the next time you restart the game**, not live.
 
@@ -682,6 +683,12 @@ An entry **replaces that region's whole weather table**, so list every weather y
 | `weathers[].likelihood` | float | relative weight, zero or more; the list must add up to more than zero |
 
 An entry with an unknown race, an unknown weather or an empty list is skipped with a warning and the region keeps its shipped odds. Weather is rolled per map node from the campaign seed, so a changed table still gives the same weather on every visit to a node.
+
+## `event_mods.json` - new map events
+
+Adds new events to the campaign map. They join the game's own events in the draw, with the same panel, dice and rewards. Each event lists when it can appear (act, faction, hero, how likely), up to ten choices (a d20 roll, paying gold, a sacrifice or walking away) and what each result gives, using the game's own reward types. Its text goes in your mod's `localization_overrides.json`.
+
+The full format, every choice kind and reward type, the text keys and the checks the game runs are on their own page: [`docs/event-mods.md`](docs/event-mods.md). [`ExampleMod/`](ExampleMod/) adds one event, The Lost Caravan.
 
 ## `unit_visuals/` - unit models
 

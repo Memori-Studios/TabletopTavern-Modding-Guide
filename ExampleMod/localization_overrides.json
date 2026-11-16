@@ -7,6 +7,27 @@
 
         { "locale": "en", "key": "heroName1", "text": "Edric the Unyielding" },
         { "locale": "en", "key": "heroDescription1", "text": "A banner-captain who has never once ordered a retreat." },
-        { "locale": "zh", "key": "heroName1", "text": "不屈者埃德里克" }
+        { "locale": "zh", "key": "heroName1", "text": "不屈者埃德里克" },
+
+        { "locale": "en", "key": "LostCaravanName", "text": "The Lost Caravan" },
+        { "locale": "en", "key": "LostCaravanDesc", "text": "A merchant caravan has taken a wrong turn into bandit country. Its master waves you down, sweating through his silks." },
+        { "locale": "en", "key": "LostCaravan0Title", "text": "Escort Them Out" },
+        { "locale": "en", "key": "LostCaravan0Desc", "text": "Walk them back to the road and keep the bandits off." },
+        { "locale": "en", "key": "LostCaravan0CriticalSuccessOutcomeDesc", "text": "Not a bandit dares show its face. The master pays you and throws in something from his wagon." },
+        { "locale": "en", "key": "LostCaravan0SuccessOutcomeDesc", "text": "The bandits watch you pass and think better of it. The master pays as promised." },
+        { "locale": "en", "key": "LostCaravan0FailureOutcomeDesc", "text": "The bandits strike at the ford. You save the wagons, but not without cuts and bruises." },
+        { "locale": "en", "key": "LostCaravan0CriticalFailureOutcomeDesc", "text": "An ambush in the narrows. The caravan gets away while your warband takes the beating." },
+        { "locale": "en", "key": "LostCaravan1Title", "text": "Buy His Spare Horses" },
+        { "locale": "en", "key": "LostCaravan1Desc", "text": "He has more horses than wagons left to pull." },
+        { "locale": "en", "key": "LostCaravan1SuccessOutcomeDesc", "text": "Fresh horses and a night's rest. Your warband rides into the next fight in high spirits." },
+        { "locale": "en", "key": "LostCaravan2Title", "text": "Scout the Ridge" },
+        { "locale": "en", "key": "LostCaravan2Desc", "text": "Send your marksmen up high to spot the bandits first." },
+        { "locale": "en", "key": "LostCaravan2CriticalSuccessOutcomeDesc", "text": "From the ridge you see the whole road ahead, and an old watchtower you can hold in your next battle." },
+        { "locale": "en", "key": "LostCaravan2SuccessOutcomeDesc", "text": "From the ridge you can see the whole road ahead, bandits and all." },
+        { "locale": "en", "key": "LostCaravan2FailureOutcomeDesc", "text": "Fog rolls over the ridge. Your scouts come back with nothing to report." },
+        { "locale": "en", "key": "LostCaravan2CriticalFailureOutcomeDesc", "text": "The bandits spot your scouts first and spread the word. Your next enemy marches in bold." },
+        { "locale": "en", "key": "LostCaravan3Title", "text": "Wish Him Luck" },
+        { "locale": "en", "key": "LostCaravan3Desc", "text": "Bandit country is not your problem." },
+        { "locale": "en", "key": "LostCaravan3SuccessOutcomeDesc", "text": "As you leave, you hear him start haggling with the bandits." }
     ]
 }
