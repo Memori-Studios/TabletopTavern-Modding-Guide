@@ -51,7 +51,7 @@ An event needs two files in your mod folder:
 
 | Field | Type | Notes |
 |---|---|---|
-| `key` | string | Your name for the event, such as `LostCaravan`. Every text key starts with it (see [Text](#text) below). It may not contain `.` or `/`, and two events in one mod may not share it. Don't end it with a digit: `Ambush1` would share text keys with choice 1 of an event called `Ambush`. |
+| `key` | string | Your name for the event, such as `LostCaravan`. Every text key starts with it (see [Text](#text) below). It may not contain `.` or `/`, end in a digit, or match one of the game's own event keys, and two events in one mod may not share it. (`Ambush1Desc` would be the text of both an event `Ambush1` and choice 1 of an event `Ambush`.) |
 | `minAct` | int | The first act the event can appear in, 1 to 3. Leave it out for act 1. |
 | `maxAct` | int | The last act it can appear in. Leave it out or write 0 for no limit. |
 | `races` | list of strings | Hero factions that can meet it: `IronLegion`, `Gruntkin`, `RavenHost`, `TaelindorForest`, `SanguineCourt`, `SakuraDynasty`, `DeepstoneHold`, `DrakosaurBrood`. Empty means every faction. |
@@ -163,7 +163,8 @@ for the `Events (<folder>)` line.
 Each event is checked when the game starts. An event with a problem is skipped and the log gets one warning that names
 the event and the problem. The rest of your mod still loads. The checks:
 
-- `key` is set, has no `.` or `/`, and no other event in your mod uses it.
+- `key` is set, has no `.` or `/`, does not end in a digit, is not one of the game's own event keys, and no other
+  event in your mod uses it.
 - 1 to 10 choices, and at least one is always open (see above).
 - `maxAct` is 0 or not below `minAct`, and `weight` is not negative.
 - Every `kind`, `type`, faction, unit type, gear and fixture is a name from the lists above, spelled exactly, with
