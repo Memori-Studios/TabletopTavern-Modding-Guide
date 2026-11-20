@@ -216,7 +216,7 @@ Mods/
 | `heroID` | int | 提供此加成的英雄 |
 | `localizationKey` | string | 用于在 UI 中显示加成名称的本地化键值 |
 | `condition` | object | 见下方"条件"部分 |
-| `stat` | enum (`UnitStat`) | `MeleeAttack`, `MeleeDefense`, `WeaponStrength`, `Accuracy`, `Range`, `MissileStrength`, `HitPoints`, `Speed`, `Armor`, `ChargeBonus`, `Leadership`, `Ammunition`, `ChargeImpactDamage`, `AttackCooldown`, `ChargeCount`, `RateOfFire`, `ExplosionDamage`, `ExplosionRange`, `ExplosionForce`。这里使用的是 `UnitStat` 名称，而不是 `unit_overrides.json` 的字段名：`HitPoints` 对应 `hitPointsPerUnit`，`Accuracy` 对应 `attackAccuracy`，`Range` 对应 `baseRange`。`AttackCooldown` 和 `RateOfFire` 的单位是秒，因此负数 `value` 会让单位更快；结果不会低于 0.1。`RateOfFire` 与单位字段一样，只影响读取它的单位：炮兵和法师。`ExplosionRange` 和 `ExplosionForce` 只影响实时战斗，不影响自动结算（自动结算没有这些机制的模型）。`ChargeCount` 仍可读取，但已不再生效（见上方 `chargeCount`）。`BaseUnitCount` 与其他属性不同：它在招募小队时应用并写入存档，因此必须是 `Flat`，不能使用 `EnemyRace` 条件，也不能作为派系规则（违反这些的规则会被加载器跳过）。招募卡、召唤预览和血条都使用同一个数量。`unitType`、`unitSize`、`rarityTier` 和 `race` 不是属性；要让它们随英雄变化，请在 `unit_overrides.json` 中使用带 `heroID` 的条目。 |
+| `stat` | enum (`UnitStat`) | `MeleeAttack`, `MeleeDefense`, `WeaponStrength`, `Accuracy`, `Range`, `MissileStrength`, `HitPoints`, `Speed`, `Armor`, `ChargeBonus`, `Leadership`, `Ammunition`, `ChargeImpactDamage`, `AttackCooldown`, `ChargeCount`, `RateOfFire`, `ExplosionDamage`, `ExplosionRange`, `ExplosionForce`。这里使用的是 `UnitStat` 名称，而不是 `unit_overrides.json` 的字段名：`HitPoints` 对应 `hitPointsPerUnit`，`Accuracy` 对应 `attackAccuracy`，`Range` 对应 `baseRange`。`AttackCooldown` 和 `RateOfFire` 的单位是秒，因此负数 `value` 会让单位更快；结果不会低于 0.1。`RateOfFire` 与单位字段一样，只影响读取它的单位：炮兵和法师。`ExplosionRange` 和 `ExplosionForce` 只影响实时战斗，不影响自动结算（自动结算没有这些机制的模型）。`ChargeCount` 仍可读取，但已不再生效（见上方 `chargeCount`）。`BaseUnitCount` 与其他属性不同：它在招募小队时应用并写入存档，因此必须是 `Flat`，不能使用 `EnemyRace` 或 `ActFaction` 条件，也不能作为派系规则（违反这些的规则会被加载器跳过）。招募卡、召唤预览和血条都使用同一个数量。`unitType`、`unitSize`、`rarityTier` 和 `race` 不是属性；要让它们随英雄变化，请在 `unit_overrides.json` 中使用带 `heroID` 的条目。 |
 | `magnitudeKind` | enum | `Flat` (直接加上 `value`) or `PercentOfCurrentValue` (加上 `value` × 该属性的当前值 - 例如 `0.5` 表示 +50%) |
 | `value` | float | |
 
@@ -241,6 +241,7 @@ Mods/
 | `UnitType` | `unitTypes`: array of `UnitType` | 适用于所列类型的单位 |
 | `UnitSize` | `unitSizes`: array of `UnitSize` | 适用于所列规模的单位 |
 | `EnemyRace` | `requiredEnemyRace`: a `Race` | 仅在与该派系作战时生效 |
+| `ActFaction` | 无 | 仅在剧情幕战斗中对抗该幕的派系时生效；驻军战斗、长征（March）、每日挑战和自定义战斗中不生效 |
 
 ## `gear_overrides.json` — 装备效果数值
 
